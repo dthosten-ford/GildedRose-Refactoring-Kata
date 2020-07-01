@@ -7,7 +7,7 @@ class GildedRoseTests: XCTestCase {
     let regularItem = "foo"
     let agedBrie = "Aged Brie"
     
-    func testFoo() {
+    func testRegularItemName() {
         let items = [Item(name: regularItem, sellIn: 0, quality: 0)]
         let app = setupWithItems(items)
         XCTAssertEqual(regularItem, app.items[0].name);
@@ -43,6 +43,41 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(app.items.first?.quality, 7)
     }
     
+    func testRegularItemQualityDelegradeSellingLessThanZero() {
+        let item = Item(name: regularItem, sellIn: -1, quality: 4)
+        assertQualityOfItemChangesBy(item, -2)
+    }
+    
+    func testAgedBrieQualityIncrease(){
+        let item = Item(name: agedBrie, sellIn: -1, quality: 5)
+        assertQualityOfItemChangesBy(item, 2)
+    }
+    
+    func testQualityIsEqualToOrLessThanFifty(){
+        let item = Item(name: agedBrie, sellIn: -1, quality: 49)
+        assertQualityOfItemChangesBy(item, 1)
+    }
+    
+    func testQualityOfBackstagePassesDoesNotExceedFifty(){
+        let item = Item(name: backStage, sellIn: 1, quality: 48)
+        assertQualityOfItemChangesBy(item, 2)
+    }
+    
+    func testQualityOfBackstagePassesDoesNotExceedFiftySellIn8(){
+        let item = Item(name: backStage, sellIn: 8, quality: 49)
+        assertQualityOfItemChangesBy(item, 1)
+    }
+    
+    func testQualityOfBackstagePassesDoesNotExceedFiftySellIn12(){
+        let item = Item(name: backStage, sellIn: 12, quality: 50)
+        assertQualityOfItemChangesBy(item, 0)
+    }
+    
+    func testQualityNonNegative() {
+        let item = Item(name: regularItem, sellIn: 5, quality: 0)
+        assertQualityOfItemChangesBy(item, 0)
+    }
+    
     func testBackstagePassQualityIsWorthlessAfterEvent() {
 //        let items = [Item(name: backStage, sellIn: 0, quality: 4)]
 //        let app = setupWithItems(items)
@@ -63,13 +98,6 @@ class GildedRoseTests: XCTestCase {
         let app = GildedRose(items: items)
         app.updateQuality()
         return app
-    }
-    
-
-    static var allTests : [(String, (GildedRoseTests) -> () throws -> Void)] {
-        return [
-            ("testFoo", testFoo),
-        ]
     }
 }
 
