@@ -79,11 +79,11 @@ class GildedRoseTests: XCTestCase {
     }
     
     func testBackstagePassQualityIsWorthlessAfterEvent() {
-//        let items = [Item(name: backStage, sellIn: 0, quality: 4)]
-//        let app = setupWithItems(items)
-//        XCTAssertEqual(app.items.first?.quality, 0)
-        
         assertQualityOfItemChangesBy(.item(named: backStage, sellIn: 0, quality: 5), -5)
+    }
+    
+    func testBackstagePassSellInLessThanZero(){
+        assertQualityOfItemChangesBy(.item(named: backStage, sellIn: -1, quality: 3), -3)
     }
     //helper function: pass in sell name, and quality change
     

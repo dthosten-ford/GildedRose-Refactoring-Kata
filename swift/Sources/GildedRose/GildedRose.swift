@@ -1,8 +1,15 @@
 public class GildedRose {
     var items:[Item]
+    var strategyMap:[String : ProductQualityStrategy] = [:]
     
     public init(items:[Item]) {
         self.items = items
+        createStrategy()
+    }
+    
+    private func createStrategy(){
+        strategyMap["Aged Brie"] = agedBrieRules()
+        strategyMap["Backstage passes to a TAFKAL80ETC concert"] = BackstagePassRules()
     }
     
     public func updateQuality() {
@@ -10,9 +17,8 @@ public class GildedRose {
             //If newCodeExistsForTheItem
             //  perform the new rules (maybe call an item-specific class i.e. AgedB
             //todo: create local variable for the current item instead
-            if (items[i].name == "Aged Brie"){
-                let rule = agedBrieRules()
-                items[i] = rule.doStuff(items[i])
+            if let rule = strategyMap[items[i].name] {
+                items[i] = rule.update(items[i])
             }
             else{
                 //do the old rules below
@@ -74,9 +80,13 @@ public class GildedRose {
 
 }
 
+protocol ProductQualityStrategy {
+    func update(_ item: Item) -> Item
+}
 
-public class agedBrieRules {
-    func doStuff(_ item: Item) -> Item{
+public class agedBrieRules : ProductQualityStrategy {
+    func update(_ item: Item) -> Item{
+        //TODO: see if we can clean this up more.  perhaps use MIN()
         item.quality += 1
         if item.sellIn < 0 {
             item.quality += 1
@@ -85,6 +95,25 @@ public class agedBrieRules {
             item.quality = 50
         }
         return item
+    }
+}
+
+class BackstagePassRules: ProductQualityStrategy {
+    func update(_ item: Item) -> Item {
+        item.quality += 1
         
+        if item.sellIn <= 10 {
+            item.quality += 1
+        }
+        if item.sellIn <= 5 {
+            item.quality += 1
+        }
+        
+        if item.sellIn <= 0 {
+            item.quality = 0
+        }
+        
+        item.quality = min(item.quality, 50)
+        return item
     }
 }
