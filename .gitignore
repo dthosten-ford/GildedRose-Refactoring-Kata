@@ -5,3 +5,4 @@ obj
 vendor
 .idea
 *.iml
+swift/.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
