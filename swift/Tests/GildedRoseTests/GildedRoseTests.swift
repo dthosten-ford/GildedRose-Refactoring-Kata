@@ -42,11 +42,35 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(items.first?.quality, 50)
     }
 
-    func testSulfuras() {
-        let items = [Item(name: "Sulfuras", sellIn: 0, quality: 30)]
+    func testSulfurasDoesNotChangeQualityOrSellIn() {
+        let items = [Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 0, quality: 30)]
         let app = GildedRose(items: items)
         app.updateQuality()
         XCTAssertEqual(items.first?.quality, 30)
-        XCTAssertEqual(items.first?.sellIn, 1)
+        XCTAssertEqual(items.first?.sellIn, 0)
+    }
+    
+    func testBackstageIncreasingQualityByTwoWhenLessThanTenDays() {
+        let items = [Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 10, quality: 0)]
+        let app = GildedRose(items: items)
+        app.updateQuality()
+        XCTAssertEqual(items.first?.quality, 2)
+        XCTAssertEqual(items.first?.sellIn, 9)
+    }
+    
+    func testBackstageIncreasingQualityByThreeWhenLessThanFiveDays() {
+        let items = [Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 5, quality: 0)]
+        let app = GildedRose(items: items)
+        app.updateQuality()
+        XCTAssertEqual(items.first?.quality, 3)
+        XCTAssertEqual(items.first?.sellIn, 4)
+    }
+    
+    func testBackstageNoQualityAfterEventFinished() {
+        let items = [Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 0, quality: 90)]
+        let app = GildedRose(items: items)
+        app.updateQuality()
+        XCTAssertEqual(items.first?.quality, 0)
+        XCTAssertEqual(items.first?.sellIn, -1)
     }
 }
