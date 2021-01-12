@@ -3,13 +3,17 @@ import XCTest
 
 class GildedRoseTests: XCTestCase {
 
+    fileprivate func extractedFunc(item: Item, expectedQuality: Int, expectedSellIn: Int) {
+        let app = GildedRose(items: [item])
+        app.updateQuality()
+        XCTAssertEqual(item.name, app.items[0].name)
+        XCTAssertEqual(item.quality, expectedQuality)
+        XCTAssertEqual(item.sellIn, expectedSellIn)
+    }
+
     func testRegularItem() {
-        let items = [Item(name: "foo", sellIn: 10, quality: 900)]
-        let app = GildedRose(items: items);
-        app.updateQuality();
-        XCTAssertEqual("foo", app.items[0].name);
-        XCTAssertEqual(items.first?.quality, 899)
-        XCTAssertEqual(items.first?.sellIn, 9)
+        let item = Item(name: "foo", sellIn: 10, quality: 900)
+        extractedFunc(item: item, expectedQuality: 899, expectedSellIn: 9)
     }
     
     func testExpiredItem() {
