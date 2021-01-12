@@ -3,7 +3,7 @@ import XCTest
 
 class GildedRoseTests: XCTestCase {
 
-    fileprivate func extractedFunc(item: Item, expectedQuality: Int, expectedSellIn: Int) {
+    private func assertChangesAfterUpdate(item: Item, expectedQuality: Int, expectedSellIn: Int) {
         let app = GildedRose(items: [item])
         app.updateQuality()
         XCTAssertEqual(item.name, app.items[0].name)
@@ -13,30 +13,22 @@ class GildedRoseTests: XCTestCase {
 
     func testRegularItem() {
         let item = Item(name: "foo", sellIn: 10, quality: 900)
-        extractedFunc(item: item, expectedQuality: 899, expectedSellIn: 9)
+        assertChangesAfterUpdate(item: item, expectedQuality: 899, expectedSellIn: 9)
     }
     
     func testExpiredItem() {
-        let items = [Item(name: "foo", sellIn: 0, quality: 900)]
-        let app = GildedRose(items: items)
-        app.updateQuality()
-        XCTAssertEqual(items.first?.quality, 898)
-        XCTAssertEqual(items.first?.sellIn, -1)
+        let item = Item(name: "foo", sellIn: 0, quality: 900)
+        assertChangesAfterUpdate(item: item, expectedQuality: 898, expectedSellIn: -1)
     }
 
     func testForNegativeQuality() {
-        let items = [Item(name: "foo", sellIn: 1, quality: 0)]
-        let app = GildedRose(items: items)
-        app.updateQuality()
-        XCTAssertEqual(items.first?.quality, 0)
+        let item = Item(name: "foo", sellIn: 1, quality: 0)
+        assertChangesAfterUpdate(item: item, expectedQuality: 0, expectedSellIn: 0)
     }
 
     func testAgedBrie() {
-        let items = [Item(name: "Aged Brie", sellIn: 1, quality: 0)]
-        let app = GildedRose(items: items)
-        app.updateQuality()
-        XCTAssertEqual(items.first?.quality, 1)
-        XCTAssertEqual(items.first?.sellIn, 0)
+        let item = Item(name: "Aged Brie", sellIn: 1, quality: 0)
+        assertChangesAfterUpdate(item: item, expectedQuality: 1, expectedSellIn: 0)
     }
 
     func testMaxQuality() {
