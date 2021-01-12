@@ -55,4 +55,8 @@ class GildedRoseTests: XCTestCase {
         let item = Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 0, quality: 90)
         assertChangesAfterUpdate(item: item, expectedQuality: 0, expectedSellIn: -1)
     }
+    
+    func testConjuredItemsDegradeInQualityTwiceAsFast() {
+
+    }
 }
