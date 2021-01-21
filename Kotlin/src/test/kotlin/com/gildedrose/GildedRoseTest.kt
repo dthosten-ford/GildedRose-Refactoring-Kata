@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test
 
 internal class GildedRoseTest {
 
+    private fun getItems(name: String, sellIn: Int, quality: Int): Array<Item> {
+        return arrayOf<Item>(Item(name, sellIn, quality))
+    }
+
     @Test
     fun testItemQualityIsNeverNegative() {
         val items = getItems("foo", 0, 0)
@@ -12,10 +16,6 @@ internal class GildedRoseTest {
 
         app.updateQuality()
         assertTrue(items[0].quality >= 0)
-    }
-
-    private fun getItems(name: String, sellIn: Int, quality: Int): Array<Item> {
-        return arrayOf<Item>(Item(name, sellIn, quality))
     }
 
     @Test
