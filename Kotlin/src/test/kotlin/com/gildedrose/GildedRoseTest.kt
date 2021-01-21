@@ -17,11 +17,20 @@ internal class GildedRoseTest {
 
     @Test
     fun itemQualityIsNeverMoreThan50(){
-        val items = arrayOf(Item("foo", 0, 50))
+        val items = arrayOf(Item("Aged Brie", 0, 50))
         val app = GildedRose(items)
 
         app.updateQuality()
 
+        assertEquals(items[0].quality, 50)
+    }
+
+    @Test
+    fun testAgedBrieShouldIncreaseQualityBy2() {
+        val items = arrayOf(Item("Aged Brie", 0, 48))
+        val app = GildedRose(items)
+
+        app.updateQuality()
         assertEquals(items[0].quality, 50)
     }
 
