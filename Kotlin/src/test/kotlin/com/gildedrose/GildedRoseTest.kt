@@ -16,13 +16,13 @@ internal class GildedRoseTest {
     }
 
     @Test
-    fun itemQualityIsNeverMoreThan50(){
+    fun testItemQualityIsNeverMoreThan50() {
         val items = arrayOf(Item("Aged Brie", 0, 50))
         val app = GildedRose(items)
 
         app.updateQuality()
 
-        assertEquals(items[0].quality, 50)
+        assertEquals(50, items[0].quality)
     }
 
     @Test
@@ -31,9 +31,18 @@ internal class GildedRoseTest {
         val app = GildedRose(items)
 
         app.updateQuality()
-        assertEquals(items[0].quality, 50)
+        assertEquals(50, items[0].quality)
     }
 
+    @Test
+    fun testSystemLowersBothValuesForEveryItemAtTheEndOfEachDay() {
+        val items = arrayOf(Item("ASDF", 0, 49))
+        val app = GildedRose(items)
+
+        app.updateQuality()
+        assertEquals(47, items[0].quality)
+        assertEquals(-1, items[0].sellIn)
+    }
 }
 
 
