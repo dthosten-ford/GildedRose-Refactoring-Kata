@@ -11,13 +11,11 @@ internal class GildedRoseTest {
         val app = GildedRose(items)
 
         app.updateQuality()
-
         assertTrue(items[0].quality >= 0)
     }
 
     private fun getItems(name: String, sellIn: Int, quality: Int): Array<Item> {
-        val items = arrayOf<Item>(Item(name, sellIn, quality))
-        return items
+        return arrayOf<Item>(Item(name, sellIn, quality))
     }
 
     @Test
@@ -26,7 +24,6 @@ internal class GildedRoseTest {
         val app = GildedRose(items)
 
         app.updateQuality()
-
         assertEquals(50, items[0].quality)
     }
 
