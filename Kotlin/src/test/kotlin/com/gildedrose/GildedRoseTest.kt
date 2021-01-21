@@ -7,12 +7,17 @@ internal class GildedRoseTest {
 
     @Test
     fun testItemQualityIsNeverNegative() {
-        val items = arrayOf<Item>(Item("foo", 0, 0))
+        val items = getItems("foo", 0, 0)
         val app = GildedRose(items)
 
         app.updateQuality()
 
         assertTrue(items[0].quality >= 0)
+    }
+
+    private fun getItems(name: String, sellIn: Int, quality: Int): Array<Item> {
+        val items = arrayOf<Item>(Item(name, sellIn, quality))
+        return items
     }
 
     @Test
