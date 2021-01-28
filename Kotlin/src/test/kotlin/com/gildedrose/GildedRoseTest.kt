@@ -2,6 +2,7 @@ package com.gildedrose
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.math.exp
 
 internal class GildedRoseTest {
 
@@ -37,6 +38,13 @@ internal class GildedRoseTest {
         app.updateQuality()
         assertEquals(47, app.items[0].quality)
         assertEquals(-1, app.items[0].sellIn)
+    }
+
+    @Test
+    fun testItemQualityIncreasesTo50WhileSellInLessThan6() {
+        val app =  getGildedRoseWithItems("Backstage passes to a TAFKAL80ETC concert", 5, 45)
+        app.updateQuality()
+        assertEquals(48, app.items[0].quality)
     }
 }
 
