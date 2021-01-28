@@ -5,45 +5,38 @@ import org.junit.jupiter.api.Test
 
 internal class GildedRoseTest {
 
-    private fun getItems(name: String, sellIn: Int, quality: Int): Array<Item> {
-        return arrayOf<Item>(Item(name, sellIn, quality))
+    private fun getGildedRoseWithItems(name: String, sellIn: Int, quality: Int): GildedRose {
+        val items = arrayOf(Item(name, sellIn, quality))
+        return GildedRose(items)
     }
 
     @Test
     fun testItemQualityIsNeverNegative() {
-        val items = getItems("foo", 0, 0)
-        val app = GildedRose(items)
-
+        val app = getGildedRoseWithItems("foo", 0, 0)
         app.updateQuality()
-        assertTrue(items[0].quality >= 0)
+        assertTrue(app.items[0].quality >= 0)
     }
 
     @Test
     fun testItemQualityIsNeverMoreThan50() {
-        val items = arrayOf(Item("Aged Brie", 0, 50))
-        val app = GildedRose(items)
-
+        val app = getGildedRoseWithItems("Aged Brie", 0, 50)
         app.updateQuality()
-        assertEquals(50, items[0].quality)
+        assertEquals(50, app.items[0].quality)
     }
 
     @Test
     fun testAgedBrieShouldIncreaseQualityBy2() {
-        val items = arrayOf(Item("Aged Brie", 0, 48))
-        val app = GildedRose(items)
-
+        val app = getGildedRoseWithItems("Aged Brie", 0, 48)
         app.updateQuality()
-        assertEquals(50, items[0].quality)
+        assertEquals(50, app.items[0].quality)
     }
 
     @Test
     fun testSystemLowersBothValuesForEveryItemAtTheEndOfEachDay() {
-        val items = arrayOf(Item("ASDF", 0, 49))
-        val app = GildedRose(items)
-
+        val app = getGildedRoseWithItems("ASDF", 0, 49)
         app.updateQuality()
-        assertEquals(47, items[0].quality)
-        assertEquals(-1, items[0].sellIn)
+        assertEquals(47, app.items[0].quality)
+        assertEquals(-1, app.items[0].sellIn)
     }
 }
 
