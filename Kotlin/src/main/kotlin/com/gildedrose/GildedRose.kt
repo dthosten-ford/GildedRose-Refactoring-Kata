@@ -2,6 +2,17 @@ package com.gildedrose
 
 class GildedRose(var items: Array<Item>) {
 
+    /* What sux about this code?
+    * - Magic Numbers -> Create Constants
+    * - String Literals -> move to variables
+    * - remove item subscript - overly verboseification -> Refactor to simplify
+    * - 2 many IF's -> ???
+    *   - create descriptive methods for code
+    *   - Duplicate Logic -> Make DRY (Don't Repeat Yourself)
+    * - Distributed Logic -> Consolidate by Name
+    * - consider simplification/abstraction with Protocol/Interface
+    *
+    * */
     fun updateQuality() {
         for (i in items.indices) {
             if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
