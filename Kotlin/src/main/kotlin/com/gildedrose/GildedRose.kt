@@ -25,9 +25,7 @@ class GildedRose(var items: Array<Item>) {
         for (item in items) {
             if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
                 if (item.quality > MINIMUM_QUALITY) {
-                    if (item.name != SULFURAS) {
-                        item.quality = item.quality - 1
-                    }
+                    decreaseItemQualityIfNotSurfuras(item)
                 }
             } else {
                 if (item.quality < MAX_QUALITY) {
@@ -70,6 +68,12 @@ class GildedRose(var items: Array<Item>) {
                     }
                 }
             }
+        }
+    }
+
+    private fun decreaseItemQualityIfNotSurfuras(item: Item) {
+        if (item.name != SULFURAS) {
+            item.quality = item.quality - 1
         }
     }
 
