@@ -22,51 +22,51 @@ class GildedRose(var items: Array<Item>) {
     *
     * */
     fun updateQuality() {
-        for (i in items.indices) {
-            if (items[i].name != AGED_BRIE && items[i].name != BACKSTAGE_PASSES) {
-                if (items[i].quality > MINIMUM_QUALITY) {
-                    if (items[i].name != SULFURAS) {
-                        items[i].quality = items[i].quality - 1
+        for (item in items) {
+            if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
+                if (item.quality > MINIMUM_QUALITY) {
+                    if (item.name != SULFURAS) {
+                        item.quality = item.quality - 1
                     }
                 }
             } else {
-                if (items[i].quality < MAX_QUALITY) {
-                    items[i].quality = items[i].quality + 1
+                if (item.quality < MAX_QUALITY) {
+                    item.quality = item.quality + 1
 
-                    if (items[i].name == BACKSTAGE_PASSES) {
-                        if (items[i].sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
-                            if (items[i].quality < MAX_QUALITY) {
-                                items[i].quality = items[i].quality + 1
+                    if (item.name == BACKSTAGE_PASSES) {
+                        if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
+                            if (item.quality < MAX_QUALITY) {
+                                item.quality = item.quality + 1
                             }
                         }
 
-                        if (items[i].sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-                            if (items[i].quality < MAX_QUALITY) {
-                                items[i].quality = items[i].quality + 1
+                        if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
+                            if (item.quality < MAX_QUALITY) {
+                                item.quality = item.quality + 1
                             }
                         }
                     }
                 }
             }
 
-            if (items[i].name != SULFURAS) {
-                items[i].sellIn = items[i].sellIn - 1
+            if (item.name != SULFURAS) {
+                item.sellIn = item.sellIn - 1
             }
 
-            if (items[i].sellIn < MINIMUM_QUALITY) {
-                if (items[i].name != AGED_BRIE) {
-                    if (items[i].name != BACKSTAGE_PASSES) {
-                        if (items[i].quality > MINIMUM_QUALITY) {
-                            if (items[i].name != SULFURAS) {
-                                items[i].quality = items[i].quality - 1
+            if (item.sellIn < MINIMUM_QUALITY) {
+                if (item.name != AGED_BRIE) {
+                    if (item.name != BACKSTAGE_PASSES) {
+                        if (item.quality > MINIMUM_QUALITY) {
+                            if (item.name != SULFURAS) {
+                                item.quality = item.quality - 1
                             }
                         }
                     } else {
-                        items[i].quality = items[i].quality - items[i].quality
+                        item.quality = item.quality - item.quality
                     }
                 } else {
-                    if (items[i].quality < MAX_QUALITY) {
-                        items[i].quality = items[i].quality + 1
+                    if (item.quality < MAX_QUALITY) {
+                        item.quality = item.quality + 1
                     }
                 }
             }
