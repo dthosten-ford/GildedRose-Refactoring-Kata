@@ -4,9 +4,12 @@ private const val MAX_QUALITY = 50
 private const val MINIMUM_QUALITY = 0
 private const val BACKSTAGE_DOUBLE_QUALITY_DAYS = 11 //TODO: Think new name
 private const val BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS = 6 //TODO: Think new name
+private const val AGED_BRIE = "Aged Brie"
+private const val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+private const val SULFURAS = "Sulfuras, Hand of Ragnaros"
+
 
 class GildedRose(var items: Array<Item>) {
-
     /* What sux about this code?
     * - Magic Numbers -> Create Constants
     * - String Literals -> move to variables
@@ -19,11 +22,10 @@ class GildedRose(var items: Array<Item>) {
     *
     * */
     fun updateQuality() {
-
         for (i in items.indices) {
-            if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
+            if (items[i].name != AGED_BRIE && items[i].name != BACKSTAGE_PASSES) {
                 if (items[i].quality > MINIMUM_QUALITY) {
-                    if (items[i].name != "Sulfuras, Hand of Ragnaros") {
+                    if (items[i].name != SULFURAS) {
                         items[i].quality = items[i].quality - 1
                     }
                 }
@@ -31,7 +33,7 @@ class GildedRose(var items: Array<Item>) {
                 if (items[i].quality < MAX_QUALITY) {
                     items[i].quality = items[i].quality + 1
 
-                    if (items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
+                    if (items[i].name == BACKSTAGE_PASSES) {
                         if (items[i].sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
                             if (items[i].quality < MAX_QUALITY) {
                                 items[i].quality = items[i].quality + 1
@@ -47,15 +49,15 @@ class GildedRose(var items: Array<Item>) {
                 }
             }
 
-            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
+            if (items[i].name != SULFURAS) {
                 items[i].sellIn = items[i].sellIn - 1
             }
 
             if (items[i].sellIn < MINIMUM_QUALITY) {
-                if (items[i].name != "Aged Brie") {
-                    if (items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
+                if (items[i].name != AGED_BRIE) {
+                    if (items[i].name != BACKSTAGE_PASSES) {
                         if (items[i].quality > MINIMUM_QUALITY) {
-                            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
+                            if (items[i].name != SULFURAS) {
                                 items[i].quality = items[i].quality - 1
                             }
                         }
