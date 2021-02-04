@@ -1,5 +1,10 @@
 package com.gildedrose
 
+private const val MAX_QUALITY = 50
+private const val MINIMUM_QUALITY = 0
+private const val BACKSTAGE_DOUBLE_QUALITY_DAYS = 11 //TODO: Think new name
+private const val BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS = 6 //TODO: Think new name
+
 class GildedRose(var items: Array<Item>) {
 
     /* What sux about this code?
@@ -13,12 +18,8 @@ class GildedRose(var items: Array<Item>) {
     * - consider simplification/abstraction with Protocol/Interface
     *
     * */
-
-    private val MAX_QUALITY = 50
-    private val MINIMUM_QUALITY = 0
-    private val EVELEN_DAYS = 11
-
     fun updateQuality() {
+
         for (i in items.indices) {
             if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
                 if (items[i].quality > MINIMUM_QUALITY) {
@@ -31,13 +32,13 @@ class GildedRose(var items: Array<Item>) {
                     items[i].quality = items[i].quality + 1
 
                     if (items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].sellIn < EVELEN_DAYS) {
+                        if (items[i].sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
                             if (items[i].quality < MAX_QUALITY) {
                                 items[i].quality = items[i].quality + 1
                             }
                         }
 
-                        if (items[i].sellIn < 6) {
+                        if (items[i].sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
                             if (items[i].quality < MAX_QUALITY) {
                                 items[i].quality = items[i].quality + 1
                             }
