@@ -13,27 +13,32 @@ class GildedRose(var items: Array<Item>) {
     * - consider simplification/abstraction with Protocol/Interface
     *
     * */
+
+    private val MAX_QUALITY = 50
+    private val MINIMUM_QUALITY = 0
+    private val EVELEN_DAYS = 11
+
     fun updateQuality() {
         for (i in items.indices) {
             if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                if (items[i].quality > 0) {
+                if (items[i].quality > MINIMUM_QUALITY) {
                     if (items[i].name != "Sulfuras, Hand of Ragnaros") {
                         items[i].quality = items[i].quality - 1
                     }
                 }
             } else {
-                if (items[i].quality < 50) {
+                if (items[i].quality < MAX_QUALITY) {
                     items[i].quality = items[i].quality + 1
 
                     if (items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
+                        if (items[i].sellIn < EVELEN_DAYS) {
+                            if (items[i].quality < MAX_QUALITY) {
                                 items[i].quality = items[i].quality + 1
                             }
                         }
 
                         if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
+                            if (items[i].quality < MAX_QUALITY) {
                                 items[i].quality = items[i].quality + 1
                             }
                         }
@@ -45,10 +50,10 @@ class GildedRose(var items: Array<Item>) {
                 items[i].sellIn = items[i].sellIn - 1
             }
 
-            if (items[i].sellIn < 0) {
+            if (items[i].sellIn < MINIMUM_QUALITY) {
                 if (items[i].name != "Aged Brie") {
                     if (items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].quality > 0) {
+                        if (items[i].quality > MINIMUM_QUALITY) {
                             if (items[i].name != "Sulfuras, Hand of Ragnaros") {
                                 items[i].quality = items[i].quality - 1
                             }
@@ -57,7 +62,7 @@ class GildedRose(var items: Array<Item>) {
                         items[i].quality = items[i].quality - items[i].quality
                     }
                 } else {
-                    if (items[i].quality < 50) {
+                    if (items[i].quality < MAX_QUALITY) {
                         items[i].quality = items[i].quality + 1
                     }
                 }
