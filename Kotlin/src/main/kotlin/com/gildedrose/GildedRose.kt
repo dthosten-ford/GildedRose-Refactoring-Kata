@@ -27,27 +27,29 @@ class GildedRose(var items: Array<Item>) {
                 return
             }
             item.sellIn = item.sellIn - 1
-            if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
-                if (item.quality > MINIMUM_QUALITY) {
-                    decreaseItemQualityIfNotSulfuras(item)
+            if (item.name == AGED_BRIE) {
+                if (item.quality < MAX_QUALITY) {
+                    item.quality = item.quality + 1
                 }
-            } else {
+            } else if (item.name == BACKSTAGE_PASSES) {
                 if (item.quality < MAX_QUALITY) {
                     item.quality = item.quality + 1
 
-                    if (item.name == BACKSTAGE_PASSES) {
-                        if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
-                            if (item.quality < MAX_QUALITY) {
-                                item.quality = item.quality + 1
-                            }
-                        }
-
-                        if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-                            if (item.quality < MAX_QUALITY) {
-                                item.quality = item.quality + 1
-                            }
+                    if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
+                        if (item.quality < MAX_QUALITY) {
+                            item.quality = item.quality + 1
                         }
                     }
+
+                    if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
+                        if (item.quality < MAX_QUALITY) {
+                            item.quality = item.quality + 1
+                        }
+                    }
+                }
+            } else {
+                if (item.quality > MINIMUM_QUALITY) {
+                    decreaseItemQualityIfNotSulfuras(item)
                 }
             }
 
