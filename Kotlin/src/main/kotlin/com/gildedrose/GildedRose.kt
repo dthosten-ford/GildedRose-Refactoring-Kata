@@ -27,37 +27,29 @@ class GildedRose(var items: Array<Item>) {
                 return
             }
             item.sellIn = item.sellIn - 1
-            if (item.name == AGED_BRIE) {
-                if (item.quality < MAX_QUALITY) {
-                    item.quality = item.quality + 1
+            when (item.name) {
+                AGED_BRIE -> {
+                    increaseQualityByOne(item)
                 }
-            } else if (item.name == BACKSTAGE_PASSES) {
-                if (item.quality < MAX_QUALITY) {
-                    item.quality = item.quality + 1
-
+                BACKSTAGE_PASSES -> {
                     if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
-                        if (item.quality < MAX_QUALITY) {
-                            item.quality = item.quality + 1
-                        }
+                        increaseQualityByOne(item)
                     }
-
                     if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-                        if (item.quality < MAX_QUALITY) {
-                            item.quality = item.quality + 1
-                        }
+                        increaseQualityByOne(item)
                     }
+                    increaseQualityByOne(item)
                 }
-            } else {
-                if (item.quality > MINIMUM_QUALITY) {
-                    decreaseItemQualityIfNotSulfuras(item)
+                else -> {
+                    if (item.quality > MINIMUM_QUALITY) {
+                        decreaseItemQualityIfNotSulfuras(item)
+                    }
                 }
             }
 
             if (item.sellIn < MINIMUM_QUALITY) {
                 if (item.name == AGED_BRIE) {
-                    if (item.quality < MAX_QUALITY) {
-                        item.quality = item.quality + 1
-                    }
+                    increaseQualityByOne(item)
                 } else if (item.name == BACKSTAGE_PASSES) {
                     item.quality = item.quality - item.quality
                 } else {
@@ -66,6 +58,12 @@ class GildedRose(var items: Array<Item>) {
                     }
                 }
             }
+        }
+    }
+
+    private fun increaseQualityByOne(item: Item) {
+        if (item.quality < MAX_QUALITY) {
+            item.quality = item.quality + 1
         }
     }
 
