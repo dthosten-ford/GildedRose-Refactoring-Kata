@@ -52,17 +52,15 @@ class GildedRose(var items: Array<Item>) {
             }
 
             if (item.sellIn < MINIMUM_QUALITY) {
-                if (item.name != AGED_BRIE) {
-                    if (item.name != BACKSTAGE_PASSES) {
-                        if (item.quality > MINIMUM_QUALITY) {
-                            item.quality = item.quality - 1
-                        }
-                    } else {
-                        item.quality = item.quality - item.quality
-                    }
-                } else {
+                if (item.name == AGED_BRIE) {
                     if (item.quality < MAX_QUALITY) {
                         item.quality = item.quality + 1
+                    }
+                } else if (item.name == BACKSTAGE_PASSES) {
+                    item.quality = item.quality - item.quality
+                } else {
+                    if (item.quality > MINIMUM_QUALITY) {
+                        item.quality = item.quality - 1
                     }
                 }
             }
