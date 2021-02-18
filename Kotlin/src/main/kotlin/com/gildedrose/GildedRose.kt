@@ -23,9 +23,13 @@ class GildedRose(var items: Array<Item>) {
     * */
     fun updateQuality() {
         for (item in items) {
+            if (item.name == SULFURAS) {
+                return
+            }
+            item.sellIn = item.sellIn - 1
             if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
                 if (item.quality > MINIMUM_QUALITY) {
-                    decreaseItemQualityIfNotSurfuras(item)
+                    decreaseItemQualityIfNotSulfuras(item)
                 }
             } else {
                 if (item.quality < MAX_QUALITY) {
@@ -47,16 +51,10 @@ class GildedRose(var items: Array<Item>) {
                 }
             }
 
-            if (item.name == SULFURAS) {
-            } else {
-                item.sellIn = item.sellIn - 1
-            }
-
             if (item.sellIn < MINIMUM_QUALITY) {
                 if (item.name != AGED_BRIE) {
                     if (item.name != BACKSTAGE_PASSES) {
                         if (item.quality > MINIMUM_QUALITY) {
-                            if (item.name == SULFURAS) continue
                             item.quality = item.quality - 1
                         }
                     } else {
@@ -71,8 +69,7 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
-    private fun decreaseItemQualityIfNotSurfuras(item: Item) {
-        if (item.name == SULFURAS) return
+    private fun decreaseItemQualityIfNotSulfuras(item: Item) {
         item.quality = item.quality - 1
     }
 
