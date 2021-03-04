@@ -49,13 +49,15 @@ class GildedRose(var items: Array<Item>) {
                 else -> {
                     if (item.quality > MINIMUM_QUALITY) {
                         decreaseItemQualityIfNotSulfuras(item)
+                        if (item.sellIn < MINIMUM_QUALITY) {
+                            decreaseItemQualityIfNotSulfuras(item)
+                        }
                     }
-                }
-            }
-
-            if (item.sellIn < MINIMUM_QUALITY) {
-                if (item.name != AGED_BRIE && item.quality > MINIMUM_QUALITY) {
-                    item.quality = item.quality - 1
+                    /*if (item.sellIn < MINIMUM_QUALITY) {
+                        if (item.quality > MINIMUM_QUALITY) {
+                            item.quality = item.quality - 1
+                        }
+                    }*/
                 }
             }
         }
