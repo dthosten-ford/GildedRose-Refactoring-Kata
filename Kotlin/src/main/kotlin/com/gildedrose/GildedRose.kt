@@ -35,13 +35,12 @@ class GildedRose(var items: Array<Item>) {
                     }
                 }
                 BACKSTAGE_PASSES -> {
-                    if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS || item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-                        increaseQualityByOne(item)
+                    if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS ) {
                         increaseQualityByOne(item)
                     }
-//                    if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-//                        increaseQualityByOne(item)
-//                    }
+                    if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
+                        increaseQualityByOne(item)
+                    }
                     increaseQualityByOne(item)
                 }
                 else -> {

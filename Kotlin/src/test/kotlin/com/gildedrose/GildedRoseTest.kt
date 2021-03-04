@@ -48,7 +48,7 @@ internal class GildedRoseTest {
 
     @Test
     fun testItemQualityIncreasesTo50WhileSellInGreaterThan6ButLessThan11() {
-        val app =  getGildedRoseWithItems("Backstage passes to a TAFKAL80ETC concert", 5, 45)
+        val app =  getGildedRoseWithItems("Backstage passes to a TAFKAL80ETC concert", 7, 45)
         app.updateQuality()
         assertEquals(47, app.items[0].quality)
     }
