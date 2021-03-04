@@ -7,20 +7,22 @@ private const val BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS = 6 //TODO: Think new nam
 private const val AGED_BRIE = "Aged Brie"
 private const val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 private const val SULFURAS = "Sulfuras, Hand of Ragnaros"
+private const val MINIMUM_SELL_IN = 0
 
 
 class GildedRose(var items: Array<Item>) {
+
     /* What sux about this code?
-    * - Magic Numbers -> Create Constants
-    * - String Literals -> move to variables
-    * - remove item subscript - overly verboseification -> Refactor to simplify
-    * - 2 many IF's -> ???
-    *   - create descriptive methods for code
-    *   - Duplicate Logic -> Make DRY (Don't Repeat Yourself)
-    * - Distributed Logic -> Consolidate by Name
-    * - consider simplification/abstraction with Protocol/Interface
-    *
-    * */
+        * - Magic Numbers -> Create Constants
+        * - String Literals -> move to variables
+        * - remove item subscript - overly verboseification -> Refactor to simplify
+        * - 2 many IF's -> ???
+        *   - create descriptive methods for code
+        *   - Duplicate Logic -> Make DRY (Don't Repeat Yourself)
+        * - Distributed Logic -> Consolidate by Name
+        * - consider simplification/abstraction with Protocol/Interface
+        *
+        * */
     fun updateQuality() {
         for (item in items) {
             if (item.name == SULFURAS) {
@@ -43,24 +45,23 @@ class GildedRose(var items: Array<Item>) {
                     }
                     increaseQualityByOne(item)
                     if (item.sellIn < MINIMUM_QUALITY) {
-                        item.quality = item.quality - item.quality
+                        resetItemQuality(item)
                     }
                 }
                 else -> {
                     if (item.quality > MINIMUM_QUALITY) {
-                        decreaseItemQualityIfNotSulfuras(item)
-                        if (item.sellIn < MINIMUM_QUALITY) {
-                            decreaseItemQualityIfNotSulfuras(item)
+                        decreaseItemQuality(item)
+                        if (item.sellIn < MINIMUM_SELL_IN) {
+                            decreaseItemQuality(item)
                         }
                     }
-                    /*if (item.sellIn < MINIMUM_QUALITY) {
-                        if (item.quality > MINIMUM_QUALITY) {
-                            item.quality = item.quality - 1
-                        }
-                    }*/
                 }
             }
         }
+    }
+
+    private fun resetItemQuality(item: Item) {
+        item.quality = item.quality - item.quality
     }
 
     private fun increaseQualityByOne(item: Item) {
@@ -69,7 +70,7 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
-    private fun decreaseItemQualityIfNotSulfuras(item: Item) {
+    private fun decreaseItemQuality(item: Item) {
         item.quality = item.quality - 1
     }
 
