@@ -13,51 +13,58 @@ private const val MINIMUM_SELL_IN = 0
 class GildedRose(var items: Array<Item>) {
 
     /* What sux about this code?
-        * - Magic Numbers -> Create Constants
-        * - String Literals -> move to variables
-        * - remove item subscript - overly verboseification -> Refactor to simplify
         * - 2 many IF's -> ???
         *   - create descriptive methods for code
         *   - Duplicate Logic -> Make DRY (Don't Repeat Yourself)
         * - Distributed Logic -> Consolidate by Name
         * - consider simplification/abstraction with Protocol/Interface
-        *
         * */
+
     fun updateQuality() {
         for (item in items) {
-            if (item.name == SULFURAS) {
+            if (item.name == SULFURAS) {    //TODO
                 return
             }
-            item.sellIn = item.sellIn - 1
+            decreaseSellInByOne(item)
             when (item.name) {
-                AGED_BRIE -> {
-                    increaseQualityByOne(item)
-                    if (item.sellIn < MINIMUM_QUALITY) {
-                        increaseQualityByOne(item)
-                    }
-                }
-                BACKSTAGE_PASSES -> {
-                    if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS ) {
-                        increaseQualityByOne(item)
-                    }
-                    if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-                        increaseQualityByOne(item)
-                    }
-                    increaseQualityByOne(item)
-                    if (item.sellIn < MINIMUM_QUALITY) {
-                        resetItemQuality(item)
-                    }
-                }
-                else -> {
-                    if (item.quality > MINIMUM_QUALITY) {
-                        decreaseItemQuality(item)
-                        if (item.sellIn < MINIMUM_SELL_IN) {
-                            decreaseItemQuality(item)
-                        }
-                    }
-                }
+                AGED_BRIE -> handlesAgedBrieQuality(item)
+                BACKSTAGE_PASSES -> handlesBackstageQuality(item)
+                else -> handlesDefaultQuality(item)
             }
         }
+    }
+
+    private fun handlesAgedBrieQuality(item: Item) {
+        increaseQualityByOne(item)
+        if (item.sellIn < MINIMUM_QUALITY) {
+            increaseQualityByOne(item)
+        }
+    }
+
+    private fun handlesBackstageQuality(item: Item) {
+        if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {  //TODO: multiple if's
+            increaseQualityByOne(item)
+        }
+        if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
+            increaseQualityByOne(item)
+        }
+        increaseQualityByOne(item)
+        if (item.sellIn < MINIMUM_QUALITY) {
+            resetItemQuality(item)
+        }
+    }
+
+    private fun handlesDefaultQuality(item: Item) {
+        if (item.quality > MINIMUM_QUALITY) {   //TODO: Nested
+            decreaseItemQuality(item)
+            if (item.sellIn < MINIMUM_SELL_IN) {
+                decreaseItemQuality(item)
+            }
+        }
+    }
+
+    private fun decreaseSellInByOne(item: Item) {
+        item.sellIn = item.sellIn - 1
     }
 
     private fun resetItemQuality(item: Item) {
