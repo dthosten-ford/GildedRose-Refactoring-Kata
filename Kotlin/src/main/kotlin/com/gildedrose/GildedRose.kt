@@ -42,6 +42,9 @@ class GildedRose(var items: Array<Item>) {
                         increaseQualityByOne(item)
                     }
                     increaseQualityByOne(item)
+                    if (item.sellIn < MINIMUM_QUALITY) {
+                        item.quality = item.quality - item.quality
+                    }
                 }
                 else -> {
                     if (item.quality > MINIMUM_QUALITY) {
@@ -51,14 +54,8 @@ class GildedRose(var items: Array<Item>) {
             }
 
             if (item.sellIn < MINIMUM_QUALITY) {
-                if (item.name == AGED_BRIE) {
-    //                increaseQualityByOne(item)
-                } else if (item.name == BACKSTAGE_PASSES) {
-                    item.quality = item.quality - item.quality
-                } else {
-                    if (item.quality > MINIMUM_QUALITY) {
-                        item.quality = item.quality - 1
-                    }
+                if (item.name != AGED_BRIE && item.quality > MINIMUM_QUALITY) {
+                    item.quality = item.quality - 1
                 }
             }
         }
