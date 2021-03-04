@@ -30,6 +30,10 @@ class GildedRose(var items: Array<Item>) {
             when (item.name) {
                 AGED_BRIE -> {
                     increaseQualityByOne(item)
+                    if (item.sellIn < MINIMUM_QUALITY) {
+                        increaseQualityByOne(item)
+                    }
+
                 }
                 BACKSTAGE_PASSES -> {
                     if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {
@@ -49,7 +53,7 @@ class GildedRose(var items: Array<Item>) {
 
             if (item.sellIn < MINIMUM_QUALITY) {
                 if (item.name == AGED_BRIE) {
-                    increaseQualityByOne(item)
+//                    increaseQualityByOne(item)
                 } else if (item.name == BACKSTAGE_PASSES) {
                     item.quality = item.quality - item.quality
                 } else {
