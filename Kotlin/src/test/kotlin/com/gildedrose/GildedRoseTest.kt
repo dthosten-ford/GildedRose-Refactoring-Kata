@@ -26,9 +26,9 @@ internal class GildedRoseTest {
 
     @Test
     fun testAgedBrieShouldIncreaseQualityBy2() {
-        val app = getGildedRoseWithItems("Aged Brie", 0, 48)
+        val app = getGildedRoseWithItems("Aged Brie", 0, 38)
         app.updateQuality()
-        assertEquals(50, app.items[0].quality)
+        assertEquals(40, app.items[0].quality)
     }
 
     @Test
@@ -44,6 +44,13 @@ internal class GildedRoseTest {
         val app =  getGildedRoseWithItems("Backstage passes to a TAFKAL80ETC concert", 5, 45)
         app.updateQuality()
         assertEquals(48, app.items[0].quality)
+    }
+
+    @Test
+    fun testItemQualityIncreasesTo50WhileSellInGreaterThan6ButLessThan11() {
+        val app =  getGildedRoseWithItems("Backstage passes to a TAFKAL80ETC concert", 5, 45)
+        app.updateQuality()
+        assertEquals(47, app.items[0].quality)
     }
 
     @Test
