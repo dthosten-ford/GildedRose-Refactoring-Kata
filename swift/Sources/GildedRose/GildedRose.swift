@@ -26,12 +26,10 @@ public class GildedRose {
              8) literals are way to specified than the business rules
              9)
              */
-            
+            guard item.name != "Sulfuras, Hand of Ragnaros" else { continue }
             if (item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert") {
                 if (item.quality > minQuality) {
-                    if (item.name != "Sulfuras, Hand of Ragnaros") {
-                        item.quality = item.quality - 1
-                    }
+                    item.quality = item.quality - 1
                 }
             } else {
 
@@ -48,17 +46,13 @@ public class GildedRose {
                 }
             }
             
-            if (item.name != "Sulfuras, Hand of Ragnaros") {
-                item.sellIn = item.sellIn - 1
-            }
+            item.sellIn = item.sellIn - 1
             
             if (item.sellIn < 0) {
                 if (item.name != "Aged Brie") {
                     if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
                         if (item.quality > minQuality) {
-                            if (item.name != "Sulfuras, Hand of Ragnaros") {
-                                item.quality = item.quality - 1
-                            }
+                            item.quality = item.quality - 1
                         }
                     } else {
                         item.quality = item.quality - item.quality
