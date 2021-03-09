@@ -43,8 +43,25 @@ public class GildedRose {
                 }
                 continue
             }
+
+            if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+                incrementQltyIfLessThanMaxQlty(item)
+                if (item.sellIn < 11) {
+                    incrementQltyIfLessThanMaxQlty(item)
+                }
+
+                if (item.sellIn < 6) {
+                    incrementQltyIfLessThanMaxQlty(item)
+                }
+                item.sellIn = item.sellIn - 1
+
+                if item.sellIn < 0 {
+                    item.quality = item.quality - item.quality
+                }
+                continue
+            }
             
-            if (item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert") {
+            if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
                 decrementQltyIfGreaterThanMinQlty(item)
             } else {
 
@@ -64,14 +81,10 @@ public class GildedRose {
             item.sellIn = item.sellIn - 1
             
             if (item.sellIn < 0) {
-                if (item.name != "Aged Brie") {
-                    if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
-                        decrementQltyIfGreaterThanMinQlty(item)
-                    } else {
-                        item.quality = item.quality - item.quality
-                    }
+                if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
+                    decrementQltyIfGreaterThanMinQlty(item)
                 } else {
-                    incrementQltyIfLessThanMaxQlty(item)
+                    item.quality = item.quality - item.quality
                 }
             }
         }
