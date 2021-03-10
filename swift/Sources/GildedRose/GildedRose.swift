@@ -39,6 +39,14 @@ public class GildedRose {
         }
     }
     
+    fileprivate func decrementSellIn(_ item: Item) {
+        item.sellIn = item.sellIn - 1
+    }
+    
+    fileprivate func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+    
     public func updateQuality() {
         for item in items {
             /*
@@ -56,16 +64,16 @@ public class GildedRose {
             case .normalItem:
                 decrementQltyIfGreaterThanMinQlty(item)
                 
-                item.sellIn = item.sellIn - 1
+                decrementSellIn(item)
                 
-                if (item.sellIn < 0) {
+                if isExpired(item) {
                     decrementQltyIfGreaterThanMinQlty(item)
                 }
             case .agedBrie:
                 incrementQltyIfLessThanMaxQlty(item)
-                item.sellIn = item.sellIn - 1
-
-                if(item.sellIn < 0) {
+                decrementSellIn(item)
+                
+                if isExpired(item) {
                     incrementQltyIfLessThanMaxQlty(item)
                 }
             case .sulfras:
@@ -75,13 +83,13 @@ public class GildedRose {
                 if (item.sellIn < 11) {
                     incrementQltyIfLessThanMaxQlty(item)
                 }
-
+                
                 if (item.sellIn < 6) {
                     incrementQltyIfLessThanMaxQlty(item)
                 }
-                item.sellIn = item.sellIn - 1
-
-                if item.sellIn < 0 {
+                decrementSellIn(item)
+                
+                if isExpired(item) {
                     item.quality = item.quality - item.quality
                 }
             }
