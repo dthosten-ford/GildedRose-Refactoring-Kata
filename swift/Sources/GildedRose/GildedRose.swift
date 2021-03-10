@@ -30,7 +30,6 @@ public class GildedRose {
              6) repeatitive conditions
              7) literals in the code
              8) literals are way to specified than the business rules
-             9) If Item is aged Brie
              */
             guard item.name != "Sulfuras, Hand of Ragnaros" else { continue }
             
@@ -61,31 +60,12 @@ public class GildedRose {
                 continue
             }
             
-            if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
-                decrementQltyIfGreaterThanMinQlty(item)
-            } else {
-
-                incrementQltyIfLessThanMaxQlty(item)
-                
-                if (item.name == "Backstage passes to a TAFKAL80ETC concert") {
-                    if (item.sellIn < 11) {
-                        incrementQltyIfLessThanMaxQlty(item)
-                    }
-                    
-                    if (item.sellIn < 6) {
-                        incrementQltyIfLessThanMaxQlty(item)
-                    }
-                }
-            }
+            decrementQltyIfGreaterThanMinQlty(item)
             
             item.sellIn = item.sellIn - 1
             
             if (item.sellIn < 0) {
-                if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
-                    decrementQltyIfGreaterThanMinQlty(item)
-                } else {
-                    item.quality = item.quality - item.quality
-                }
+                decrementQltyIfGreaterThanMinQlty(item)
             }
         }
     }
