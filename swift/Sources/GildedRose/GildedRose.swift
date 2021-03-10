@@ -62,31 +62,27 @@ public class GildedRose {
                     decrementQltyIfGreaterThanMinQlty(item)
                 }
             case .agedBrie:
-                if item.name == "Aged Brie" {
+                incrementQltyIfLessThanMaxQlty(item)
+                item.sellIn = item.sellIn - 1
+
+                if(item.sellIn < 0) {
                     incrementQltyIfLessThanMaxQlty(item)
-                    item.sellIn = item.sellIn - 1
-                    
-                    if(item.sellIn < 0) {
-                        incrementQltyIfLessThanMaxQlty(item)
-                    }
                 }
             case .sulfras:
                 continue
             case .backstagePass:
-                if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+                incrementQltyIfLessThanMaxQlty(item)
+                if (item.sellIn < 11) {
                     incrementQltyIfLessThanMaxQlty(item)
-                    if (item.sellIn < 11) {
-                        incrementQltyIfLessThanMaxQlty(item)
-                    }
+                }
 
-                    if (item.sellIn < 6) {
-                        incrementQltyIfLessThanMaxQlty(item)
-                    }
-                    item.sellIn = item.sellIn - 1
+                if (item.sellIn < 6) {
+                    incrementQltyIfLessThanMaxQlty(item)
+                }
+                item.sellIn = item.sellIn - 1
 
-                    if item.sellIn < 0 {
-                        item.quality = item.quality - item.quality
-                    }
+                if item.sellIn < 0 {
+                    item.quality = item.quality - item.quality
                 }
             }
         }
