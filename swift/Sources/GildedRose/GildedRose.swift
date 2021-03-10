@@ -19,6 +19,26 @@ public class GildedRose {
         }
     }
     
+    private enum ItemType {
+        case normalItem
+        case agedBrie
+        case sulfras
+        case backstagePass
+        
+        static func typeFor(itemName: String) -> ItemType {
+            switch itemName {
+            case "Sulfuras, Hand of Ragnaros":
+                return .sulfras
+            case "Aged Brie":
+                return .agedBrie
+            case "Backstage passes to a TAFKAL80ETC concert":
+                return .backstagePass
+            default:
+                return .normalItem
+            }
+        }
+    }
+    
     public func updateQuality() {
         for item in items {
             /*
@@ -31,41 +51,43 @@ public class GildedRose {
              7) literals in the code
              8) literals are way to specified than the business rules
              */
-            guard item.name != "Sulfuras, Hand of Ragnaros" else { continue }
-            
-            if item.name == "Aged Brie" {
-                incrementQltyIfLessThanMaxQlty(item)
+            let itemType = ItemType.typeFor(itemName: item.name)
+            switch itemType {
+            case .normalItem:
+                decrementQltyIfGreaterThanMinQlty(item)
+                
                 item.sellIn = item.sellIn - 1
                 
-                if(item.sellIn < 0) {
-                    incrementQltyIfLessThanMaxQlty(item)
+                if (item.sellIn < 0) {
+                    decrementQltyIfGreaterThanMinQlty(item)
                 }
+            case .agedBrie:
+                if item.name == "Aged Brie" {
+                    incrementQltyIfLessThanMaxQlty(item)
+                    item.sellIn = item.sellIn - 1
+                    
+                    if(item.sellIn < 0) {
+                        incrementQltyIfLessThanMaxQlty(item)
+                    }
+                }
+            case .sulfras:
                 continue
-            }
-
-            if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-                incrementQltyIfLessThanMaxQlty(item)
-                if (item.sellIn < 11) {
+            case .backstagePass:
+                if item.name == "Backstage passes to a TAFKAL80ETC concert" {
                     incrementQltyIfLessThanMaxQlty(item)
-                }
+                    if (item.sellIn < 11) {
+                        incrementQltyIfLessThanMaxQlty(item)
+                    }
 
-                if (item.sellIn < 6) {
-                    incrementQltyIfLessThanMaxQlty(item)
-                }
-                item.sellIn = item.sellIn - 1
+                    if (item.sellIn < 6) {
+                        incrementQltyIfLessThanMaxQlty(item)
+                    }
+                    item.sellIn = item.sellIn - 1
 
-                if item.sellIn < 0 {
-                    item.quality = item.quality - item.quality
+                    if item.sellIn < 0 {
+                        item.quality = item.quality - item.quality
+                    }
                 }
-                continue
-            }
-            
-            decrementQltyIfGreaterThanMinQlty(item)
-            
-            item.sellIn = item.sellIn - 1
-            
-            if (item.sellIn < 0) {
-                decrementQltyIfGreaterThanMinQlty(item)
             }
         }
     }
