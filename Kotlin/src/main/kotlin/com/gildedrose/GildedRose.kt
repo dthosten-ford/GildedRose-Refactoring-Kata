@@ -12,6 +12,7 @@ private const val MINIMUM_SELL_IN = 0
 
 class GildedRose(var items: Array<Item>) {
 
+    val itemStrategy:ItemStrategy = ItemStrategy()
     /* What sux about this code?
         * - 2 many IF's -> ???
         *   - create descriptive methods for code
@@ -66,14 +67,14 @@ class GildedRose(var items: Array<Item>) {
 
     private fun handlesDefaultQuality(item: Item) {
         if (item.quality > MINIMUM_QUALITY) {
-            decreaseItemQuality(item)
+            itemStrategy.decreaseItemQuality(item)
             minimumSellInDecreaseItemQuality(item)
         }
     }
 
     private fun minimumSellInDecreaseItemQuality(item: Item) {
         if (item.sellIn < MINIMUM_SELL_IN) {
-            decreaseItemQuality(item)
+            itemStrategy.decreaseItemQuality(item)
         }
     }
 
@@ -91,9 +92,12 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
-    private fun decreaseItemQuality(item: Item) {
-        item.quality = item.quality - 1
+    inner class ItemStrategy {
+        fun decreaseItemQuality(item: Item) {
+            item.quality = item.quality - 1
+        }
     }
-
 }
+
+
 
