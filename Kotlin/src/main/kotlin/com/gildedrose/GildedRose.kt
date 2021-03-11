@@ -36,7 +36,7 @@ class GildedRose(var items: Array<Item>) {
 
     private fun handlesAgedBrieQuality(item: Item) {
         increaseQualityByOne(item)
-        if (item.sellIn < MINIMUM_QUALITY) {
+        if (eventHasPassed(item)) {
             increaseQualityByOne(item)
         }
     }
@@ -49,17 +49,23 @@ class GildedRose(var items: Array<Item>) {
             increaseQualityByOne(item)
         }
         increaseQualityByOne(item)
-        if (item.sellIn < MINIMUM_QUALITY) {
+        if (eventHasPassed(item)) {
             resetItemQuality(item)
         }
     }
 
+    private fun eventHasPassed(item: Item) = item.sellIn < MINIMUM_QUALITY
+
     private fun handlesDefaultQuality(item: Item) {
-        if (item.quality > MINIMUM_QUALITY) {   //TODO: Nested
+        if (item.quality > MINIMUM_QUALITY) {
             decreaseItemQuality(item)
-            if (item.sellIn < MINIMUM_SELL_IN) {
-                decreaseItemQuality(item)
-            }
+            minimumSellInDecreaseItemQuality(item)
+        }
+    }
+
+    private fun minimumSellInDecreaseItemQuality(item: Item) {
+        if (item.sellIn < MINIMUM_SELL_IN) {
+            decreaseItemQuality(item)
         }
     }
 
