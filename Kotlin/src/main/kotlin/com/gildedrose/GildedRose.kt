@@ -28,37 +28,40 @@ class GildedRose(var items: Array<Item>) {
             }
             itemStrategy.decreaseSellInByOne(item)
             when (item.name) {
-                AGED_BRIE -> BrieStrategy().handlesAgedBrieQuality(item)
-                BACKSTAGE_PASSES -> handlesBackstageQuality(item)
+                AGED_BRIE -> BrieStrategy().updateQuality(item)
+                BACKSTAGE_PASSES -> BackstageStrategy().updateQuality(item)
                 else -> itemStrategy.updateQuality(item)
             }
         }
     }
 
-    private fun handlesBackstageQuality(item: Item) {
-        handleBackstageDiscountDays(item)
-        handleComingSoonDaysQuality(item)
-        itemStrategy.increaseQualityByOne(item)
-        if (itemStrategy.eventHasPassed(item)) {
-            itemStrategy.resetItemQuality(item)
-        }
-    }
+    inner class BackstageStrategy: ItemStrategy() {
 
-    private fun handleBackstageDiscountDays(item: Item) {
-        if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {
+        override fun updateQuality(item: Item) {
+            handleBackstageDiscountDays(item)
+            handleComingSoonDaysQuality(item)
             itemStrategy.increaseQualityByOne(item)
+            if (itemStrategy.eventHasPassed(item)) {
+                itemStrategy.resetItemQuality(item)
+            }
         }
-    }
 
-    private fun handleComingSoonDaysQuality(item: Item) {
-        if (item.sellIn < BACKSTAGE_COMING_SOON_DAYS_EVENTS) {
-            itemStrategy.increaseQualityByOne(item)
+        fun handleBackstageDiscountDays(item: Item) {
+            if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {
+                itemStrategy.increaseQualityByOne(item)
+            }
+        }
+
+        fun handleComingSoonDaysQuality(item: Item) {
+            if (item.sellIn < BACKSTAGE_COMING_SOON_DAYS_EVENTS) {
+                itemStrategy.increaseQualityByOne(item)
+            }
         }
     }
 
     inner class BrieStrategy: ItemStrategy() {
 
-        fun handlesAgedBrieQuality(item: Item) {
+        override fun updateQuality(item: Item) {
             itemStrategy.increaseQualityByOne(item)
             if (itemStrategy.eventHasPassed(item)) {
                 itemStrategy.increaseQualityByOne(item)
@@ -68,7 +71,7 @@ class GildedRose(var items: Array<Item>) {
 
     open inner class ItemStrategy {
 
-        fun updateQuality(item: Item) {
+        open fun updateQuality(item: Item) {
             if (item.quality > MINIMUM_QUALITY) {
                 itemStrategy.decreaseItemQuality(item)
                 itemStrategy.minimumSellInDecreaseItemQuality(item)
