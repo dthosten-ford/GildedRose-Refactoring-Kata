@@ -1,9 +1,4 @@
 
-protocol ItemUpdatingStrategy {
-    func canHandleItem(item: Item) -> Bool
-    func updateItem(item: Item)
-}
-
 public class GildedRose {
     var items:[Item]
     let minQuality = 0
@@ -76,12 +71,7 @@ public class GildedRose {
                     decrementQltyIfGreaterThanMinQlty(item)
                 }
             case .agedBrie:
-                incrementQltyIfLessThanMaxQlty(item)
-                decrementSellIn(item)
-                
-                if isExpired(item) {
-                    incrementQltyIfLessThanMaxQlty(item)
-                }
+                AgedBrieUpdateStrategy().updateItem(item: item)
             case .sulfras:
                 continue
             case .backstagePass:
@@ -101,4 +91,56 @@ public class GildedRose {
             }
         }
     }
+}
+
+protocol ItemUpdatingStrategy {
+    func canHandleItem(item: Item) -> Bool
+    func updateItem(item: Item)
+}
+
+class BaseItemStrategy: ItemUpdatingStrategy {
+    let minQuality = 0
+    let maxQuality = 50
+    
+    func canHandleItem(item: Item) -> Bool {
+        return false
+    }
+    
+    func updateItem(item: Item) {}
+    
+    func incrementQltyIfLessThanMaxQlty(_ item: Item) {
+        if (item.quality < maxQuality) {
+            item.quality = item.quality + 1
+        }
+    }
+    
+    func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
+        if (item.quality > minQuality) {
+            item.quality = item.quality - 1
+        }
+    }
+    
+    fileprivate func decrementSellIn(_ item: Item) {
+        item.sellIn = item.sellIn - 1
+    }
+    
+    fileprivate func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+}
+
+class AgedBrieUpdateStrategy: BaseItemStrategy {
+    override func canHandleItem(item: Item) -> Bool {
+        item.name == "Aged Brie"
+    }
+    
+    override func updateItem(item: Item) {
+        incrementQltyIfLessThanMaxQlty(item)
+        decrementSellIn(item)
+        
+        if isExpired(item) {
+            incrementQltyIfLessThanMaxQlty(item)
+        }
+    }
+    
 }
