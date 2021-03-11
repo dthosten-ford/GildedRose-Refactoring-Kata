@@ -3,16 +3,12 @@ public class GildedRose {
     var items:[Item]
     let minQuality = 0
     let maxQuality = 50
+    var baseStrategy = BaseItemStrategy()
     
     public init(items:[Item]) {
         self.items = items
     }
     
-    fileprivate func incrementQltyIfLessThanMaxQlty(_ item: Item) {
-        if (item.quality < maxQuality) {
-            item.quality = item.quality + 1
-        }
-    }
     
     fileprivate func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
         if (item.quality > minQuality) {
@@ -75,13 +71,13 @@ public class GildedRose {
             case .sulfras:
                 continue
             case .backstagePass:
-                incrementQltyIfLessThanMaxQlty(item)
+                baseStrategy.incrementQltyIfLessThanMaxQlty(item)
                 if (item.sellIn < 11) {
-                    incrementQltyIfLessThanMaxQlty(item)
+                    baseStrategy.incrementQltyIfLessThanMaxQlty(item)
                 }
                 
                 if (item.sellIn < 6) {
-                    incrementQltyIfLessThanMaxQlty(item)
+                    baseStrategy.incrementQltyIfLessThanMaxQlty(item)
                 }
                 decrementSellIn(item)
                 
