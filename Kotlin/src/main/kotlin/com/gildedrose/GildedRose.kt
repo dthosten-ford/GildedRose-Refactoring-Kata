@@ -2,8 +2,8 @@ package com.gildedrose
 
 private const val MAX_QUALITY = 50
 private const val MINIMUM_QUALITY = 0
-private const val BACKSTAGE_DOUBLE_QUALITY_DAYS = 11 //TODO: Think new name
-private const val BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS = 6 //TODO: Think new name
+private const val BACKSTAGE_DISCOUNT_DAYS = 11
+private const val BACKSTAGE_COMING_SOON_DAYS_EVENTS = 6
 private const val AGED_BRIE = "Aged Brie"
 private const val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 private const val SULFURAS = "Sulfuras, Hand of Ragnaros"
@@ -42,15 +42,23 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun handlesBackstageQuality(item: Item) {
-        if (item.sellIn < BACKSTAGE_DOUBLE_QUALITY_DAYS) {  //TODO: multiple if's
-            increaseQualityByOne(item)
-        }
-        if (item.sellIn < BACKSTAGE_QUALITY_INCREASE_BY_3_DAYS) {
-            increaseQualityByOne(item)
-        }
+        handleBackstageDiscountDays(item)
+        handleComingSoonDaysQuality(item)
         increaseQualityByOne(item)
         if (eventHasPassed(item)) {
             resetItemQuality(item)
+        }
+    }
+
+    private fun handleComingSoonDaysQuality(item: Item) {
+        if (item.sellIn < BACKSTAGE_COMING_SOON_DAYS_EVENTS) {
+            increaseQualityByOne(item)
+        }
+    }
+
+    private fun handleBackstageDiscountDays(item: Item) {
+        if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {  //TODO: multiple if's
+            increaseQualityByOne(item)
         }
     }
 
