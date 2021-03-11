@@ -12,7 +12,7 @@ private const val MINIMUM_SELL_IN = 0
 
 class GildedRose(var items: Array<Item>) {
 
-    val itemStrategy:ItemStrategy = ItemStrategy()
+    val itemStrategy: ItemStrategy = ItemStrategy()
     /* What sux about this code?
         * - 2 many IF's -> ???
         *   - create descriptive methods for code
@@ -26,7 +26,7 @@ class GildedRose(var items: Array<Item>) {
             if (item.name == SULFURAS) {    //TODO
                 return
             }
-            decreaseSellInByOne(item)
+            itemStrategy.decreaseSellInByOne(item)
             when (item.name) {
                 AGED_BRIE -> handlesAgedBrieQuality(item)
                 BACKSTAGE_PASSES -> handlesBackstageQuality(item)
@@ -36,66 +36,68 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun handlesAgedBrieQuality(item: Item) {
-        increaseQualityByOne(item)
-        if (eventHasPassed(item)) {
-            increaseQualityByOne(item)
+        itemStrategy.increaseQualityByOne(item)
+        if (itemStrategy.eventHasPassed(item)) {
+            itemStrategy.increaseQualityByOne(item)
         }
     }
 
     private fun handlesBackstageQuality(item: Item) {
         handleBackstageDiscountDays(item)
         handleComingSoonDaysQuality(item)
-        increaseQualityByOne(item)
-        if (eventHasPassed(item)) {
-            resetItemQuality(item)
-        }
-    }
-
-    private fun handleComingSoonDaysQuality(item: Item) {
-        if (item.sellIn < BACKSTAGE_COMING_SOON_DAYS_EVENTS) {
-            increaseQualityByOne(item)
+        itemStrategy.increaseQualityByOne(item)
+        if (itemStrategy.eventHasPassed(item)) {
+            itemStrategy.resetItemQuality(item)
         }
     }
 
     private fun handleBackstageDiscountDays(item: Item) {
         if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {  //TODO: multiple if's
-            increaseQualityByOne(item)
+            itemStrategy.increaseQualityByOne(item)
         }
     }
 
-    private fun eventHasPassed(item: Item) = item.sellIn < MINIMUM_QUALITY
+    private fun handleComingSoonDaysQuality(item: Item) {
+        if (item.sellIn < BACKSTAGE_COMING_SOON_DAYS_EVENTS) {
+            itemStrategy.increaseQualityByOne(item)
+        }
+    }
+
 
     private fun handlesDefaultQuality(item: Item) {
         if (item.quality > MINIMUM_QUALITY) {
             itemStrategy.decreaseItemQuality(item)
-            minimumSellInDecreaseItemQuality(item)
+            itemStrategy.minimumSellInDecreaseItemQuality(item)
         }
     }
 
-    private fun minimumSellInDecreaseItemQuality(item: Item) {
-        if (item.sellIn < MINIMUM_SELL_IN) {
-            itemStrategy.decreaseItemQuality(item)
-        }
-    }
-
-    private fun decreaseSellInByOne(item: Item) {
-        item.sellIn = item.sellIn - 1
-    }
-
-    private fun resetItemQuality(item: Item) {
-        item.quality = item.quality - item.quality
-    }
-
-    private fun increaseQualityByOne(item: Item) {
-        if (item.quality < MAX_QUALITY) {
-            item.quality = item.quality + 1
-        }
-    }
 
     inner class ItemStrategy {
         fun decreaseItemQuality(item: Item) {
             item.quality = item.quality - 1
         }
+
+        fun minimumSellInDecreaseItemQuality(item: Item) {
+            if (item.sellIn < MINIMUM_SELL_IN) {
+                itemStrategy.decreaseItemQuality(item)
+            }
+        }
+
+        fun decreaseSellInByOne(item: Item) {
+            item.sellIn = item.sellIn - 1
+        }
+
+        fun resetItemQuality(item: Item) {
+            item.quality = item.quality - item.quality
+        }
+
+        fun increaseQualityByOne(item: Item) {
+            if (item.quality < MAX_QUALITY) {
+                item.quality = item.quality + 1
+            }
+        }
+
+        fun eventHasPassed(item: Item) = item.sellIn < MINIMUM_QUALITY
     }
 }
 
