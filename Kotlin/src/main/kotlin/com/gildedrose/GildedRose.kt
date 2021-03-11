@@ -28,17 +28,10 @@ class GildedRose(var items: Array<Item>) {
             }
             itemStrategy.decreaseSellInByOne(item)
             when (item.name) {
-                AGED_BRIE -> handlesAgedBrieQuality(item)
+                AGED_BRIE -> BrieStrategy().handlesAgedBrieQuality(item)
                 BACKSTAGE_PASSES -> handlesBackstageQuality(item)
-                else -> handlesDefaultQuality(item)
+                else -> itemStrategy.updateQuality(item)
             }
-        }
-    }
-
-    private fun handlesAgedBrieQuality(item: Item) {
-        itemStrategy.increaseQualityByOne(item)
-        if (itemStrategy.eventHasPassed(item)) {
-            itemStrategy.increaseQualityByOne(item)
         }
     }
 
@@ -52,7 +45,7 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun handleBackstageDiscountDays(item: Item) {
-        if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {  //TODO: multiple if's
+        if (item.sellIn < BACKSTAGE_DISCOUNT_DAYS) {
             itemStrategy.increaseQualityByOne(item)
         }
     }
@@ -63,16 +56,25 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
+    inner class BrieStrategy: ItemStrategy() {
 
-    private fun handlesDefaultQuality(item: Item) {
-        if (item.quality > MINIMUM_QUALITY) {
-            itemStrategy.decreaseItemQuality(item)
-            itemStrategy.minimumSellInDecreaseItemQuality(item)
+        fun handlesAgedBrieQuality(item: Item) {
+            itemStrategy.increaseQualityByOne(item)
+            if (itemStrategy.eventHasPassed(item)) {
+                itemStrategy.increaseQualityByOne(item)
+            }
         }
     }
 
+    open inner class ItemStrategy {
 
-    inner class ItemStrategy {
+        fun updateQuality(item: Item) {
+            if (item.quality > MINIMUM_QUALITY) {
+                itemStrategy.decreaseItemQuality(item)
+                itemStrategy.minimumSellInDecreaseItemQuality(item)
+            }
+        }
+
         fun decreaseItemQuality(item: Item) {
             item.quality = item.quality - 1
         }
