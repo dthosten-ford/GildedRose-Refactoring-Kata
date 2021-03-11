@@ -1,3 +1,9 @@
+
+protocol ItemUpdatingStrategy {
+    func canHandleItem(item: Item) -> Bool
+    func updateItem(item: Item)
+}
+
 public class GildedRose {
     var items:[Item]
     let minQuality = 0
