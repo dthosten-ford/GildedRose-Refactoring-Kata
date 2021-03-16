@@ -1,8 +1,6 @@
 
 public class GildedRose {
     var items:[Item]
-    let minQuality = 0
-    let maxQuality = 50
     var baseStrategy = BaseItemStrategy()
     
     public init(items:[Item]) {
@@ -54,7 +52,7 @@ public class GildedRose {
             case .agedBrie:
                 AgedBrieUpdateStrategy().updateItem(item: item)
             case .sulfras:
-                continue
+                SulfrasStrategy().updateItem(item: item)
             case .backstagePass:
                 baseStrategy.incrementQltyIfLessThanMaxQlty(item)
                 if (item.sellIn < 11) {
@@ -75,17 +73,12 @@ public class GildedRose {
 }
 
 protocol ItemUpdatingStrategy {
-    func canHandleItem(item: Item) -> Bool
     func updateItem(item: Item)
 }
 
 class BaseItemStrategy: ItemUpdatingStrategy {
     let minQuality = 0
     let maxQuality = 50
-    
-    func canHandleItem(item: Item) -> Bool {
-        return false
-    }
     
     func updateItem(item: Item) {}
     
@@ -111,9 +104,6 @@ class BaseItemStrategy: ItemUpdatingStrategy {
 }
 
 class AgedBrieUpdateStrategy: BaseItemStrategy {
-    override func canHandleItem(item: Item) -> Bool {
-        item.name == "Aged Brie"
-    }
     
     override func updateItem(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
@@ -124,4 +114,9 @@ class AgedBrieUpdateStrategy: BaseItemStrategy {
         }
     }
     
+}
+
+
+class SulfrasStrategy: ItemUpdatingStrategy {
+    func updateItem(item: Item) { }
 }
