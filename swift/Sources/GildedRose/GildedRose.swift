@@ -48,19 +48,7 @@ public class GildedRose {
             case .sulfras:
                 SulfrasStrategy().updateItem(item: item)
             case .backstagePass:
-                baseStrategy.incrementQltyIfLessThanMaxQlty(item)
-                if (item.sellIn < 11) {
-                    baseStrategy.incrementQltyIfLessThanMaxQlty(item)
-                }
-                
-                if (item.sellIn < 6) {
-                    baseStrategy.incrementQltyIfLessThanMaxQlty(item)
-                }
-                baseStrategy.decrementSellIn(item)
-                
-                if baseStrategy.isExpired(item) {
-                    item.quality = item.quality - item.quality
-                }
+                BackstagePassStrategy().updateItem(item: item)
             }
         }
     }
@@ -123,4 +111,25 @@ class StandardItemStrategy: BaseItemStrategy, ItemUpdatingStrategy {
             decrementQltyIfGreaterThanMinQlty(item)
         }
     }
+}
+
+class BackstagePassStrategy: BaseItemStrategy, ItemUpdatingStrategy {
+    func updateItem(item: Item) {
+        incrementQltyIfLessThanMaxQlty(item)
+        if (item.sellIn < 11) {
+            incrementQltyIfLessThanMaxQlty(item)
+        }
+
+        if (item.sellIn < 6) {
+            incrementQltyIfLessThanMaxQlty(item)
+        }
+        decrementSellIn(item)
+
+        if isExpired(item) {
+            item.quality = item.quality - item.quality
+        }
+    }
+
+
+
 }
