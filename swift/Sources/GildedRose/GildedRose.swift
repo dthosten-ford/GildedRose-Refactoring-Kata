@@ -63,8 +63,12 @@ class BaseItemStrategy {
     let maxQuality = 50
     
     func incrementQltyIfLessThanMaxQlty(_ item: Item) {
+        increaseQualityByIfLessThanMaxQlty(1, item: item)
+    }
+    
+    func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
         if (item.quality < maxQuality) {
-            item.quality = item.quality + 1
+            item.quality = item.quality + amount
         }
     }
     
@@ -115,12 +119,11 @@ class StandardItemStrategy: BaseItemStrategy, ItemUpdatingStrategy {
 
 class BackstagePassStrategy: BaseItemStrategy, ItemUpdatingStrategy {
     func updateItem(item: Item) {
-        incrementQltyIfLessThanMaxQlty(item)
-        if (item.sellIn < 11) {
-            incrementQltyIfLessThanMaxQlty(item)
-        }
-
-        if (item.sellIn < 6) {
+        if item.sellIn < 6 {
+            increaseQualityByIfLessThanMaxQlty(3, item: item)
+        } else if item.sellIn < 11 {
+            increaseQualityByIfLessThanMaxQlty(2, item: item)
+        } else {
             incrementQltyIfLessThanMaxQlty(item)
         }
         decrementSellIn(item)
@@ -129,7 +132,4 @@ class BackstagePassStrategy: BaseItemStrategy, ItemUpdatingStrategy {
             item.quality = item.quality - item.quality
         }
     }
-
-
-
 }
