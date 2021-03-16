@@ -9,13 +9,6 @@ public class GildedRose {
         self.items = items
     }
     
-    
-    fileprivate func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
-        if (item.quality > minQuality) {
-            item.quality = item.quality - 1
-        }
-    }
-    
     private enum ItemType {
         case normalItem
         case agedBrie
@@ -59,12 +52,12 @@ public class GildedRose {
             let itemType = ItemType.typeFor(itemName: item.name)
             switch itemType {
             case .normalItem:
-                decrementQltyIfGreaterThanMinQlty(item)
+                baseStrategy.decrementQltyIfGreaterThanMinQlty(item)
                 
                 decrementSellIn(item)
                 
                 if isExpired(item) {
-                    decrementQltyIfGreaterThanMinQlty(item)
+                    baseStrategy.decrementQltyIfGreaterThanMinQlty(item)
                 }
             case .agedBrie:
                 AgedBrieUpdateStrategy().updateItem(item: item)
