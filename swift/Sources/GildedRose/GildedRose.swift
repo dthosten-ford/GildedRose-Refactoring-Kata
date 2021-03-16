@@ -42,13 +42,7 @@ public class GildedRose {
             let itemType = ItemType.typeFor(itemName: item.name)
             switch itemType {
             case .normalItem:
-                baseStrategy.decrementQltyIfGreaterThanMinQlty(item)
-                
-                baseStrategy.decrementSellIn(item)
-                
-                if baseStrategy.isExpired(item) {
-                    baseStrategy.decrementQltyIfGreaterThanMinQlty(item)
-                }
+                StandardItemStrategy().updateItem(item: item)
             case .agedBrie:
                 AgedBrieUpdateStrategy().updateItem(item: item)
             case .sulfras:
@@ -76,11 +70,9 @@ protocol ItemUpdatingStrategy {
     func updateItem(item: Item)
 }
 
-class BaseItemStrategy: ItemUpdatingStrategy {
+class BaseItemStrategy {
     let minQuality = 0
     let maxQuality = 50
-    
-    func updateItem(item: Item) {}
     
     func incrementQltyIfLessThanMaxQlty(_ item: Item) {
         if (item.quality < maxQuality) {
@@ -103,9 +95,9 @@ class BaseItemStrategy: ItemUpdatingStrategy {
     }
 }
 
-class AgedBrieUpdateStrategy: BaseItemStrategy {
+class AgedBrieUpdateStrategy: BaseItemStrategy, ItemUpdatingStrategy {
     
-    override func updateItem(item: Item) {
+    func updateItem(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
         decrementSellIn(item)
         
@@ -119,4 +111,16 @@ class AgedBrieUpdateStrategy: BaseItemStrategy {
 
 class SulfrasStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) { }
+}
+
+class StandardItemStrategy: BaseItemStrategy, ItemUpdatingStrategy {
+    func updateItem(item: Item) {
+        decrementQltyIfGreaterThanMinQlty(item)
+        
+        decrementSellIn(item)
+        
+        if isExpired(item) {
+            decrementQltyIfGreaterThanMinQlty(item)
+        }
+    }
 }
