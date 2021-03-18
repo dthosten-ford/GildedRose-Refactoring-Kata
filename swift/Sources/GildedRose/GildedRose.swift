@@ -50,6 +50,14 @@ public class GildedRose {
              8) literals are way to specified than the business rules
              */
             let itemType = ItemType.typeFor(itemName: item.name)
+
+            if let strategy = itemStrategies.first(where: { strategy -> Bool in
+                strategy.canHandle(item: item)
+            }) {
+                strategy.updateItem(item: item)
+                continue
+            }
+            
             switch itemType {
             case .normalItem:
                 StandardItemStrategy().updateItem(item: item)
@@ -66,6 +74,7 @@ public class GildedRose {
 
 protocol ItemUpdatingStrategy {
     func updateItem(item: Item)
+    func canHandle(item: Item) -> Bool
 }
 
 extension ItemUpdatingStrategy {
@@ -96,6 +105,10 @@ extension ItemUpdatingStrategy {
     fileprivate func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
+    
+    func canHandle(item: Item) -> Bool {
+        false
+    }
 }
 
 class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
@@ -106,6 +119,10 @@ class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
         if isExpired(item) {
             incrementQltyIfLessThanMaxQlty(item)
         }
+    }
+    
+    func canHandle(item: Item) -> Bool {
+        return item.name == "Aged Brie"
     }
 }
 
