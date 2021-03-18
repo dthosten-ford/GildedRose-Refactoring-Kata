@@ -1,9 +1,20 @@
 
 public class GildedRose {
     var items:[Item]
+    private let itemStrategies: [ItemUpdatingStrategy]
     
-    public init(items:[Item]) {
+    init(items:[Item],
+         itemStrategies: [ItemUpdatingStrategy]) {
         self.items = items
+        self.itemStrategies = itemStrategies
+    }
+    
+    public convenience init(items: [Item]) {
+        self.init(items: items,
+                  itemStrategies: [AgedBrieUpdateStrategy(),
+                                   SulfrasStrategy(),
+                                   StandardItemStrategy(),
+                                   BackstagePassStrategy()])
     }
     
     private enum ItemType {
@@ -88,7 +99,6 @@ extension ItemUpdatingStrategy {
 }
 
 class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
-    
     func updateItem(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
         decrementSellIn(item)
@@ -97,9 +107,7 @@ class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
             incrementQltyIfLessThanMaxQlty(item)
         }
     }
-    
 }
-
 
 class SulfrasStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) { }
