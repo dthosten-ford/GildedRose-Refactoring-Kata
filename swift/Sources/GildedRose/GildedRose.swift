@@ -1,7 +1,6 @@
 
 public class GildedRose {
     var items:[Item]
-    var baseStrategy = BaseItemStrategy()
     
     public init(items:[Item]) {
         self.items = items
@@ -58,36 +57,37 @@ protocol ItemUpdatingStrategy {
     func updateItem(item: Item)
 }
 
-class BaseItemStrategy {
-    let minQuality = 0
-    let maxQuality = 50
-    
+extension ItemUpdatingStrategy {
+    var minQuality: Int { 0 }
+
+    var maxQuality: Int { 50 }
+
     func incrementQltyIfLessThanMaxQlty(_ item: Item) {
         increaseQualityByIfLessThanMaxQlty(1, item: item)
     }
-    
+
     func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
         if (item.quality < maxQuality) {
             item.quality = item.quality + amount
         }
     }
-    
+
     func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
         if (item.quality > minQuality) {
             item.quality = item.quality - 1
         }
     }
-    
+
     fileprivate func decrementSellIn(_ item: Item) {
         item.sellIn = item.sellIn - 1
     }
-    
+
     fileprivate func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
 }
 
-class AgedBrieUpdateStrategy: BaseItemStrategy, ItemUpdatingStrategy {
+class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
     
     func updateItem(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
@@ -105,7 +105,7 @@ class SulfrasStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) { }
 }
 
-class StandardItemStrategy: BaseItemStrategy, ItemUpdatingStrategy {
+class StandardItemStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
         
@@ -117,7 +117,7 @@ class StandardItemStrategy: BaseItemStrategy, ItemUpdatingStrategy {
     }
 }
 
-class BackstagePassStrategy: BaseItemStrategy, ItemUpdatingStrategy {
+class BackstagePassStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
