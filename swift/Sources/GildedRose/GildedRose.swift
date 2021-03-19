@@ -1,11 +1,11 @@
 
 public class GildedRose {
     var items: [Item]
-    private let specialItemStrategies: [ItemUpdatingStrategy]
+    private let specialItemStrategies: [SpecialItemStrategy]
     private let standardItemStrategy: ItemUpdatingStrategy
     
     init(items:[Item],
-         specialItemStrategies: [ItemUpdatingStrategy],
+         specialItemStrategies: [SpecialItemStrategy],
          standardItemStrategy: ItemUpdatingStrategy) {
         self.items = items
         self.specialItemStrategies = specialItemStrategies
@@ -48,6 +48,9 @@ public class GildedRose {
 
 protocol ItemUpdatingStrategy {
     func updateItem(item: Item)
+}
+
+protocol SpecialItemStrategy: ItemUpdatingStrategy {
     func canHandle(item: Item) -> Bool
 }
 
@@ -78,13 +81,9 @@ extension ItemUpdatingStrategy {
     fileprivate func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
-    
-    func canHandle(item: Item) -> Bool {
-        false
-    }
 }
 
-class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
+class AgedBrieUpdateStrategy: SpecialItemStrategy {
     func updateItem(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
         decrementSellIn(item)
@@ -99,7 +98,7 @@ class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
     }
 }
 
-class SulfrasStrategy: ItemUpdatingStrategy {
+class SulfrasStrategy: SpecialItemStrategy {
     func updateItem(item: Item) { }
     
     func canHandle(item: Item) -> Bool {
@@ -117,13 +116,9 @@ class StandardItemStrategy: ItemUpdatingStrategy {
             decrementQltyIfGreaterThanMinQlty(item)
         }
     }
-    
-    func canHandle(item: Item) -> Bool {
-        true
-    }
 }
 
-class BackstagePassStrategy: ItemUpdatingStrategy {
+class BackstagePassStrategy: SpecialItemStrategy {
     func updateItem(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
