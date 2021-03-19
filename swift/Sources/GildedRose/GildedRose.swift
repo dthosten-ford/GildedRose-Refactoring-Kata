@@ -1,21 +1,24 @@
 
 public class GildedRose {
     var items: [Item]
-    private let itemStrategies: [ItemUpdatingStrategy]
+    private let specialItemStrategies: [ItemUpdatingStrategy]
+    private let standardItemStrategy: ItemUpdatingStrategy
     
     init(items:[Item],
-         itemStrategies: [ItemUpdatingStrategy]) {
+         specialItemStrategies: [ItemUpdatingStrategy],
+         standardItemStrategy: ItemUpdatingStrategy) {
         self.items = items
-        self.itemStrategies = itemStrategies
+        self.specialItemStrategies = specialItemStrategies
+        self.standardItemStrategy = standardItemStrategy
     }
     
     public convenience init(items: [Item]) {
         self.init(items: items,
-                  itemStrategies: [AgedBrieUpdateStrategy(),
+                  specialItemStrategies: [AgedBrieUpdateStrategy(),
                                    SulfrasStrategy(),
-                                   BackstagePassStrategy(),
-                                   StandardItemStrategy()
-                  ])
+                                   BackstagePassStrategy()
+                  ],
+                  standardItemStrategy: StandardItemStrategy())
     }
     
     
@@ -31,12 +34,13 @@ public class GildedRose {
              7) literals in the code ✅
              8) literals are way to specified than the business rules ✅
              */
-
-            if let strategy = itemStrategies.first(where: { strategy -> Bool in
+            
+            if let strategy = specialItemStrategies.first(where: { strategy in
                 strategy.canHandle(item: item)
             }) {
                 strategy.updateItem(item: item)
-                continue
+            } else {
+                standardItemStrategy.updateItem(item: item)
             }
         }
     }
@@ -50,27 +54,27 @@ protocol ItemUpdatingStrategy {
 extension ItemUpdatingStrategy {
     var minQuality: Int { 0 }
     var maxQuality: Int { 50 }
-
+    
     func incrementQltyIfLessThanMaxQlty(_ item: Item) {
         increaseQualityByIfLessThanMaxQlty(1, item: item)
     }
-
+    
     func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
         if (item.quality < maxQuality) {
             item.quality = item.quality + amount
         }
     }
-
+    
     func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
         if (item.quality > minQuality) {
             item.quality = item.quality - 1
         }
     }
-
+    
     fileprivate func decrementSellIn(_ item: Item) {
         item.sellIn = item.sellIn - 1
     }
-
+    
     fileprivate func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
@@ -129,7 +133,7 @@ class BackstagePassStrategy: ItemUpdatingStrategy {
             incrementQltyIfLessThanMaxQlty(item)
         }
         decrementSellIn(item)
-
+        
         if isExpired(item) {
             item.quality = item.quality - item.quality
         }
