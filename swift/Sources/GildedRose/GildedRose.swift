@@ -1,6 +1,6 @@
 
 public class GildedRose {
-    var items:[Item]
+    var items: [Item]
     private let itemStrategies: [ItemUpdatingStrategy]
     
     init(items:[Item],
@@ -40,14 +40,14 @@ public class GildedRose {
     public func updateQuality() {
         for item in items {
             /*
-             1) Too much nested if statement
+             1) Too much nested if statement ✅
              2) hard to understand and scattered logic
-             3) needs methods to do the operations
-             4) item can be moved to a constant
-             5) magic numbers with no explanation
-             6) repeatitive conditions
-             7) literals in the code
-             8) literals are way to specified than the business rules
+             3) needs methods to do the operations ✅
+             4) item can be moved to a constant ✅
+             5) magic numbers with no explanation ✅
+             6) repeatitive conditions ✅
+             7) literals in the code ✅
+             8) literals are way to specified than the business rules ✅
              */
             let itemType = ItemType.typeFor(itemName: item.name)
 
@@ -61,12 +61,9 @@ public class GildedRose {
             switch itemType {
             case .normalItem:
                 StandardItemStrategy().updateItem(item: item)
-            case .agedBrie:
-                AgedBrieUpdateStrategy().updateItem(item: item)
-            case .sulfras:
-                SulfrasStrategy().updateItem(item: item)
-            case .backstagePass:
-                BackstagePassStrategy().updateItem(item: item)
+            case .agedBrie: continue
+            case .sulfras: continue
+            case .backstagePass: continue
             }
         }
     }
@@ -79,7 +76,6 @@ protocol ItemUpdatingStrategy {
 
 extension ItemUpdatingStrategy {
     var minQuality: Int { 0 }
-
     var maxQuality: Int { 50 }
 
     func incrementQltyIfLessThanMaxQlty(_ item: Item) {
@@ -122,12 +118,16 @@ class AgedBrieUpdateStrategy: ItemUpdatingStrategy {
     }
     
     func canHandle(item: Item) -> Bool {
-        return item.name == "Aged Brie"
+        item.name == "Aged Brie"
     }
 }
 
 class SulfrasStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) { }
+    
+    func canHandle(item: Item) -> Bool {
+        item.name == "Sulfuras, Hand of Ragnaros"
+    }
 }
 
 class StandardItemStrategy: ItemUpdatingStrategy {
@@ -156,5 +156,9 @@ class BackstagePassStrategy: ItemUpdatingStrategy {
         if isExpired(item) {
             item.quality = item.quality - item.quality
         }
+    }
+    
+    func canHandle(item: Item) -> Bool {
+        item.name == "Backstage passes to a TAFKAL80ETC concert"
     }
 }
