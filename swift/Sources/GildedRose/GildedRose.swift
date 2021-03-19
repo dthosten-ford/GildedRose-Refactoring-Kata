@@ -13,29 +13,11 @@ public class GildedRose {
         self.init(items: items,
                   itemStrategies: [AgedBrieUpdateStrategy(),
                                    SulfrasStrategy(),
-                                   StandardItemStrategy(),
-                                   BackstagePassStrategy()])
+                                   BackstagePassStrategy(),
+                                   StandardItemStrategy()
+                  ])
     }
     
-    private enum ItemType {
-        case normalItem
-        case agedBrie
-        case sulfras
-        case backstagePass
-        
-        static func typeFor(itemName: String) -> ItemType {
-            switch itemName {
-            case "Sulfuras, Hand of Ragnaros":
-                return .sulfras
-            case "Aged Brie":
-                return .agedBrie
-            case "Backstage passes to a TAFKAL80ETC concert":
-                return .backstagePass
-            default:
-                return .normalItem
-            }
-        }
-    }
     
     public func updateQuality() {
         for item in items {
@@ -49,21 +31,12 @@ public class GildedRose {
              7) literals in the code ✅
              8) literals are way to specified than the business rules ✅
              */
-            let itemType = ItemType.typeFor(itemName: item.name)
 
             if let strategy = itemStrategies.first(where: { strategy -> Bool in
                 strategy.canHandle(item: item)
             }) {
                 strategy.updateItem(item: item)
                 continue
-            }
-            
-            switch itemType {
-            case .normalItem:
-                StandardItemStrategy().updateItem(item: item)
-            case .agedBrie: continue
-            case .sulfras: continue
-            case .backstagePass: continue
             }
         }
     }
@@ -139,6 +112,10 @@ class StandardItemStrategy: ItemUpdatingStrategy {
         if isExpired(item) {
             decrementQltyIfGreaterThanMinQlty(item)
         }
+    }
+    
+    func canHandle(item: Item) -> Bool {
+        true
     }
 }
 
