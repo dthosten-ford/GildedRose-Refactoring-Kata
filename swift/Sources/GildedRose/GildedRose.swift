@@ -142,12 +142,21 @@ class BackstagePassStrategy: SpecialItemStrategy {
 
 class ConjuredStrategy: SpecialItemStrategy {
     func updateItem(item: Item) {
-        decrementQltyIfGreaterThanMinQlty(item)
-        decrementQltyIfGreaterThanMinQlty(item)
+        decrementQualityBy2(item)
+        
         decrementSellIn(item)
+        
+        if isExpired(item) {
+            decrementQualityBy2(item)
+        }
     }
     
     func canHandle(item: Item) -> Bool {
         item.name == "Conjured"
+    }
+    
+    private func decrementQualityBy2(_ item: Item) {
+        decrementQltyIfGreaterThanMinQlty(item)
+        decrementQltyIfGreaterThanMinQlty(item)
     }
 }

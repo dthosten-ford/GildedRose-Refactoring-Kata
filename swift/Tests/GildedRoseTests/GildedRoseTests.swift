@@ -60,4 +60,9 @@ class GildedRoseTests: XCTestCase {
         let item = Item(name: "Conjured", sellIn: 5, quality: 50)
         assertChangesAfterUpdate(item: item, expectedQuality: 48, expectedSellIn: 4)
     }
+    
+    func testConjuredItemsDegradeTwiceAsFastAfterExpired() {
+        let item = Item(name: "Conjured", sellIn: 0, quality: 50)
+        assertChangesAfterUpdate(item: item, expectedQuality: 46, expectedSellIn: -1)
+    }
 }
