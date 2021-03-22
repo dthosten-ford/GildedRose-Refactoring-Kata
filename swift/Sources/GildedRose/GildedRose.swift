@@ -16,7 +16,8 @@ public class GildedRose {
         self.init(items: items,
                   specialItemStrategies: [AgedBrieUpdateStrategy(),
                                    SulfrasStrategy(),
-                                   BackstagePassStrategy()
+                                   BackstagePassStrategy(),
+                                   ConjuredStrategy()
                   ],
                   standardItemStrategy: StandardItemStrategy())
     }
@@ -136,5 +137,17 @@ class BackstagePassStrategy: SpecialItemStrategy {
     
     func canHandle(item: Item) -> Bool {
         item.name == "Backstage passes to a TAFKAL80ETC concert"
+    }
+}
+
+class ConjuredStrategy: SpecialItemStrategy {
+    func updateItem(item: Item) {
+        decrementQltyIfGreaterThanMinQlty(item)
+        decrementQltyIfGreaterThanMinQlty(item)
+        decrementSellIn(item)
+    }
+    
+    func canHandle(item: Item) -> Bool {
+        item.name == "Conjured"
     }
 }
