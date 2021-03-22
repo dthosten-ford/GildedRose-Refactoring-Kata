@@ -57,6 +57,7 @@ class GildedRoseTests: XCTestCase {
     }
     
     func testConjuredItemsDegradeInQualityTwiceAsFast() {
-
+        let item = Item(name: "Conjured", sellIn: 5, quality: 50)
+        assertChangesAfterUpdate(item: item, expectedQuality: 48, expectedSellIn: 4)
     }
 }
