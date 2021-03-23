@@ -119,19 +119,22 @@ class StandardItemStrategy: ItemUpdatingStrategy {
     }
 }
 
-class BackstagePassStrategy: SpecialItemStrategy {
-    func updateItem(item: Item) {
+class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
+    override func updateItem(item: Item) {
+        super.updateItem(item: item)
+        
+        if isExpired(item) {
+            item.quality = item.quality - item.quality
+        }
+    }
+    
+    override func updateQuality(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
         } else if item.sellIn < 11 {
             increaseQualityByIfLessThanMaxQlty(2, item: item)
         } else {
             incrementQltyIfLessThanMaxQlty(item)
-        }
-        decrementSellIn(item)
-        
-        if isExpired(item) {
-            item.quality = item.quality - item.quality
         }
     }
     
@@ -165,13 +168,11 @@ class ConjuredStrategy: BaseStrategy, SpecialItemStrategy {
 
 class BaseStrategy: ItemUpdatingStrategy {
     func updateItem(item: Item) {
-        decrementSellIn(item)
         updateQuality(item: item)
+        decrementSellIn(item)
     }
 
     func updateQuality(item: Item) {
 
     }
-
-
 }

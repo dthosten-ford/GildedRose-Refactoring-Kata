@@ -56,6 +56,11 @@ class GildedRoseTests: XCTestCase {
         assertChangesAfterUpdate(item: item, expectedQuality: 0, expectedSellIn: -1)
     }
     
+    func testBackstageIncreasingQualityByTwoWhenSixDays() {
+        let item = Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 6, quality: 0)
+        assertChangesAfterUpdate(item: item, expectedQuality: 2, expectedSellIn: 5)
+    }
+    
     func testConjuredItemsDegradeInQualityTwiceAsFast() {
         let item = Item(name: "Conjured", sellIn: 5, quality: 50)
         assertChangesAfterUpdate(item: item, expectedQuality: 48, expectedSellIn: 4)
