@@ -160,3 +160,13 @@ class ConjuredStrategy: SpecialItemStrategy {
         decrementQltyIfGreaterThanMinQlty(item)
     }
 }
+
+class BaseStrategy: ItemUpdatingStrategy {
+    func updateItem(item: Item) {
+
+    }
+
+    func updateQuality(item: Item) {
+
+    }
+}
