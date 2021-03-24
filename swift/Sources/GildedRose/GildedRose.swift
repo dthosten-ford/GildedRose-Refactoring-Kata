@@ -84,14 +84,17 @@ extension ItemUpdatingStrategy {
     }
 }
 
-class AgedBrieUpdateStrategy: SpecialItemStrategy {
-    func updateItem(item: Item) {
-        incrementQltyIfLessThanMaxQlty(item)
-        decrementSellIn(item)
-        
+class AgedBrieUpdateStrategy: BaseStrategy, SpecialItemStrategy {
+    override func updateItem(item: Item) {
+        super.updateItem(item: item)
+
         if isExpired(item) {
             incrementQltyIfLessThanMaxQlty(item)
         }
+    }
+
+    override func updateQuality(item: Item) {
+        incrementQltyIfLessThanMaxQlty(item)
     }
     
     func canHandle(item: Item) -> Bool {
