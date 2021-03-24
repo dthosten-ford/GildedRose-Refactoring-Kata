@@ -55,35 +55,6 @@ protocol SpecialItemStrategy: ItemUpdatingStrategy {
     func canHandle(item: Item) -> Bool
 }
 
-extension ItemUpdatingStrategy {
-    var minQuality: Int { 0 }
-    var maxQuality: Int { 50 }
-    
-    func incrementQltyIfLessThanMaxQlty(_ item: Item) {
-        increaseQualityByIfLessThanMaxQlty(1, item: item)
-    }
-    
-    func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
-        if (item.quality < maxQuality) {
-            item.quality = item.quality + amount
-        }
-    }
-    
-    func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
-        if (item.quality > minQuality) {
-            item.quality = item.quality - 1
-        }
-    }
-    
-    fileprivate func decrementSellIn(_ item: Item) {
-        item.sellIn = item.sellIn - 1
-    }
-    
-    fileprivate func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
-    }
-}
-
 class AgedBrieUpdateStrategy: BaseStrategy, SpecialItemStrategy {
     override func updateQuality(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
@@ -156,6 +127,9 @@ class ConjuredStrategy: BaseStrategy, SpecialItemStrategy {
 }
 
 class BaseStrategy: ItemUpdatingStrategy {
+    let minQuality: Int = 0
+    let maxQuality: Int = 50
+    
     func updateItem(item: Item) {
         updateQuality(item: item)
         decrementSellIn(item)
@@ -170,5 +144,29 @@ class BaseStrategy: ItemUpdatingStrategy {
     
     func updateExpiredItem(_ item: Item) {
         
+    }
+    
+    func incrementQltyIfLessThanMaxQlty(_ item: Item) {
+        increaseQualityByIfLessThanMaxQlty(1, item: item)
+    }
+    
+    func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
+        if (item.quality < maxQuality) {
+            item.quality = item.quality + amount
+        }
+    }
+    
+    func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
+        if (item.quality > minQuality) {
+            item.quality = item.quality - 1
+        }
+    }
+    
+    func decrementSellIn(_ item: Item) {
+        item.sellIn = item.sellIn - 1
+    }
+    
+    func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
     }
 }
