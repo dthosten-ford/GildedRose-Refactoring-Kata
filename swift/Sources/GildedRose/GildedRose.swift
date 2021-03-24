@@ -111,15 +111,11 @@ class SulfrasStrategy: SpecialItemStrategy {
 }
 
 class StandardItemStrategy: BaseStrategy {
-    override func updateItem(item: Item) {
-        super.updateItem(item: item)
-
-        if isExpired(item) {
-            decrementQltyIfGreaterThanMinQlty(item)
-        }
-    }
-
     override func updateQuality(item: Item) {
+        decrementQltyIfGreaterThanMinQlty(item)
+    }
+    
+    override func updateExpiredItem(_ item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
     }
 }
