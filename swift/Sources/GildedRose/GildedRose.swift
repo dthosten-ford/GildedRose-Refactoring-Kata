@@ -125,14 +125,6 @@ class StandardItemStrategy: BaseStrategy {
 }
 
 class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
-    override func updateItem(item: Item) {
-        super.updateItem(item: item)
-        
-        if isExpired(item) {
-            item.quality = item.quality - item.quality
-        }
-    }
-    
     override func updateQuality(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
@@ -141,6 +133,10 @@ class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
         } else {
             incrementQltyIfLessThanMaxQlty(item)
         }
+    }
+    
+    override func updateExpiredItem(_ item: Item) {
+        item.quality = 0
     }
     
     func canHandle(item: Item) -> Bool {
