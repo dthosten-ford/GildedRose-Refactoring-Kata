@@ -17,7 +17,7 @@ public class GildedRose {
                   specialItemStrategies: [AgedBrieUpdateStrategy(),
                                    SulfrasStrategy(),
                                    BackstagePassStrategy(),
-                                   ConjuredStrategy()
+                                   AltBaseStategy(handler: AltConjuredStrategy())
                   ],
                   standardItemStrategy: StandardItemStrategy())
     }
@@ -123,6 +123,88 @@ class ConjuredStrategy: BaseStrategy, SpecialItemStrategy {
     private func decrementQualityBy2(_ item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
         decrementQltyIfGreaterThanMinQlty(item)
+    }
+}
+
+class AltConjuredStrategy: ConditionalQualityUpdater {
+    func updateQuality(item: Item) {
+        decrementQualityBy2(item)
+    }
+    
+    func updateExpiredItem(_ item: Item) {
+        decrementQualityBy2(item)
+    }
+    
+    func canHandle(item: Item) -> Bool {
+        item.name == "Conjured"
+    }
+    
+    private func decrementQualityBy2(_ item: Item) {
+        decrementQltyIfGreaterThanMinQlty(item)
+        decrementQltyIfGreaterThanMinQlty(item)
+    }
+}
+
+protocol QualityUpdater {
+    func updateQuality(item: Item)
+    func updateExpiredItem(_ item: Item)
+    
+    func decrementSellIn(_ item: Item)
+    func isExpired(_ item: Item) -> Bool
+}
+
+extension QualityUpdater {
+    var minQuality: Int { 0 }
+    var maxQuality: Int { 50 }
+    
+    func incrementQltyIfLessThanMaxQlty(_ item: Item) {
+        increaseQualityByIfLessThanMaxQlty(1, item: item)
+    }
+    
+    func increaseQualityByIfLessThanMaxQlty(_ amount: Int, item: Item) {
+        if (item.quality < maxQuality) {
+            item.quality = item.quality + amount
+        }
+    }
+    
+    func decrementQltyIfGreaterThanMinQlty(_ item: Item) {
+        if (item.quality > minQuality) {
+            item.quality = item.quality - 1
+        }
+    }
+    
+    func decrementSellIn(_ item: Item) {
+        item.sellIn = item.sellIn - 1
+    }
+    
+    func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+}
+
+protocol ConditionalQualityUpdater: QualityUpdater {
+    func canHandle(item: Item) -> Bool
+}
+
+class AltBaseStategy<Handler: QualityUpdater>: ItemUpdatingStrategy {
+    let handler: Handler
+    
+    init(handler: Handler) {
+        self.handler = handler
+    }
+    
+    func updateItem(item: Item) {
+        handler.updateQuality(item: item)
+        handler.decrementSellIn(item)
+        if handler.isExpired(item) {
+            handler.updateExpiredItem(item)
+        }
+    }
+}
+
+extension AltBaseStategy: SpecialItemStrategy where Handler: ConditionalQualityUpdater {
+    func canHandle(item: Item) -> Bool {
+        handler.canHandle(item: item)
     }
 }
 
