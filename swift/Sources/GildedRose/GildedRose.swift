@@ -14,12 +14,12 @@ public class GildedRose {
     
     public convenience init(items: [Item]) {
         self.init(items: items,
-                  specialItemStrategies: [AltBaseStategy(handler: AgedBrieQualityUpdater()),
-                                   SulfrasStrategy(),
-                                   BackstagePassStrategy(),
-                                   AltBaseStategy(handler: ConjuredItemQualityUpdater())
+                  specialItemStrategies: [ItemUpdateOrchestrator(handler: AgedBrieQualityUpdater()),
+                                          SulfrasStrategy(),
+                                          ItemUpdateOrchestrator(handler: BackstagePassQualityUpdater()),
+                                          ItemUpdateOrchestrator(handler: ConjuredItemQualityUpdater())
                   ],
-                  standardItemStrategy: StandardItemStrategy())
+                  standardItemStrategy: ItemUpdateOrchestrator(handler: StandardItemQualityUpdater()))
     }
     
     
@@ -35,14 +35,10 @@ public class GildedRose {
              7) literals in the code ✅
              8) literals are way to specified than the business rules ✅
              */
-            
-            if let strategy = specialItemStrategies.first(where: { strategy in
+            let strategy = specialItemStrategies.first(where: { strategy in
                 strategy.canHandle(item: item)
-            }) {
-                strategy.updateItem(item: item)
-            } else {
-                standardItemStrategy.updateItem(item: item)
-            }
+            }) ?? standardItemStrategy
+            strategy.updateItem(item: item)
         }
     }
 }
@@ -77,18 +73,18 @@ class SulfrasStrategy: SpecialItemStrategy {
     }
 }
 
-class StandardItemStrategy: BaseStrategy {
-    override func updateQuality(item: Item) {
+class StandardItemQualityUpdater: QualityUpdater {
+    func updateQuality(item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
     }
     
-    override func updateExpiredItem(_ item: Item) {
+    func updateExpiredItem(_ item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
     }
 }
 
-class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
-    override func updateQuality(item: Item) {
+class BackstagePassQualityUpdater: ConditionalQualityUpdater {
+    func updateQuality(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
         } else if item.sellIn < 11 {
@@ -98,7 +94,7 @@ class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
         }
     }
     
-    override func updateExpiredItem(_ item: Item) {
+    func updateExpiredItem(_ item: Item) {
         item.quality = 0
     }
     
@@ -167,7 +163,7 @@ protocol ConditionalQualityUpdater: QualityUpdater {
     func canHandle(item: Item) -> Bool
 }
 
-class AltBaseStategy<Handler: QualityUpdater>: ItemUpdatingStrategy {
+class ItemUpdateOrchestrator<Handler: QualityUpdater>: ItemUpdatingStrategy {
     let handler: Handler
     
     init(handler: Handler) {
@@ -183,7 +179,7 @@ class AltBaseStategy<Handler: QualityUpdater>: ItemUpdatingStrategy {
     }
 }
 
-extension AltBaseStategy: SpecialItemStrategy where Handler: ConditionalQualityUpdater {
+extension ItemUpdateOrchestrator: SpecialItemStrategy where Handler: ConditionalQualityUpdater {
     func canHandle(item: Item) -> Bool {
         handler.canHandle(item: item)
     }
