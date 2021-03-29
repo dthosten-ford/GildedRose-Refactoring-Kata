@@ -55,6 +55,22 @@ protocol SpecialItemStrategy: ItemUpdatingStrategy {
     func canHandle(item: Item) -> Bool
 }
 
+class AgedBrieHandlerUpdater: ConditionalQualityUpdater {
+    func canHandle(item: Item) -> Bool {
+        false
+    }
+
+    func updateQuality(item: Item) {
+
+    }
+
+    func updateExpiredItem(_ item: Item) {
+
+    }
+
+
+}
+
 class AgedBrieUpdateStrategy: BaseStrategy, SpecialItemStrategy {
     override func updateQuality(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
