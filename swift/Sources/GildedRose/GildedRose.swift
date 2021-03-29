@@ -14,10 +14,10 @@ public class GildedRose {
     
     public convenience init(items: [Item]) {
         self.init(items: items,
-                  specialItemStrategies: [AgedBrieUpdateStrategy(),
+                  specialItemStrategies: [AltBaseStategy(handler: AgedBrieQualityUpdater()),
                                    SulfrasStrategy(),
                                    BackstagePassStrategy(),
-                                   AltBaseStategy(handler: AltConjuredStrategy())
+                                   AltBaseStategy(handler: ConjuredItemQualityUpdater())
                   ],
                   standardItemStrategy: StandardItemStrategy())
     }
@@ -55,33 +55,17 @@ protocol SpecialItemStrategy: ItemUpdatingStrategy {
     func canHandle(item: Item) -> Bool
 }
 
-class AgedBrieHandlerUpdater: ConditionalQualityUpdater {
+class AgedBrieQualityUpdater: ConditionalQualityUpdater {
     func canHandle(item: Item) -> Bool {
-        false
+        item.name == "Aged Brie"
     }
 
     func updateQuality(item: Item) {
-
+        incrementQltyIfLessThanMaxQlty(item)
     }
 
     func updateExpiredItem(_ item: Item) {
-
-    }
-
-
-}
-
-class AgedBrieUpdateStrategy: BaseStrategy, SpecialItemStrategy {
-    override func updateQuality(item: Item) {
         incrementQltyIfLessThanMaxQlty(item)
-    }
-    
-    override func updateExpiredItem(_ item: Item) {
-        incrementQltyIfLessThanMaxQlty(item)
-    }
-    
-    func canHandle(item: Item) -> Bool {
-        item.name == "Aged Brie"
     }
 }
 
@@ -123,26 +107,7 @@ class BackstagePassStrategy: BaseStrategy, SpecialItemStrategy {
     }
 }
 
-class ConjuredStrategy: BaseStrategy, SpecialItemStrategy {
-    override func updateQuality(item: Item) {
-        decrementQualityBy2(item)
-    }
-    
-    override func updateExpiredItem(_ item: Item) {
-        decrementQualityBy2(item)
-    }
-    
-    func canHandle(item: Item) -> Bool {
-        item.name == "Conjured"
-    }
-    
-    private func decrementQualityBy2(_ item: Item) {
-        decrementQltyIfGreaterThanMinQlty(item)
-        decrementQltyIfGreaterThanMinQlty(item)
-    }
-}
-
-class AltConjuredStrategy: ConditionalQualityUpdater {
+class ConjuredItemQualityUpdater: ConditionalQualityUpdater {
     func updateQuality(item: Item) {
         decrementQualityBy2(item)
     }
