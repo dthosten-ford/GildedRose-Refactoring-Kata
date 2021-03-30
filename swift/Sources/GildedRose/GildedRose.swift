@@ -15,7 +15,7 @@ public class GildedRose {
     public convenience init(items: [Item]) {
         self.init(items: items,
                   specialItemStrategies: [ItemUpdateOrchestrator(handler: AgedBrieQualityUpdater()),
-                                          SulfrasStrategy(),
+                                          ItemUpdateOrchestrator(handler: SulfrasQualityUpdater()),
                                           ItemUpdateOrchestrator(handler: BackstagePassQualityUpdater()),
                                           ItemUpdateOrchestrator(handler: ConjuredItemQualityUpdater())
                   ],
@@ -52,6 +52,10 @@ protocol SpecialItemStrategy: ItemUpdatingStrategy {
 }
 
 class AgedBrieQualityUpdater: ConditionalQualityUpdater {
+    func updateSellin(item: Item) {
+        decrementSellIn(item)
+    }
+    
     func canHandle(item: Item) -> Bool {
         item.name == "Aged Brie"
     }
@@ -65,7 +69,13 @@ class AgedBrieQualityUpdater: ConditionalQualityUpdater {
     }
 }
 
-class SulfrasStrategy: SpecialItemStrategy {
+class SulfrasQualityUpdater: ConditionalQualityUpdater {
+    func updateSellin(item: Item) { }
+    
+    func updateQuality(item: Item) { }
+    
+    func updateExpiredItem(_ item: Item) { }
+    
     func updateItem(item: Item) { }
     
     func canHandle(item: Item) -> Bool {
@@ -74,6 +84,10 @@ class SulfrasStrategy: SpecialItemStrategy {
 }
 
 class StandardItemQualityUpdater: QualityUpdater {
+    func updateSellin(item: Item) {
+        decrementSellIn(item)
+    }
+    
     func updateQuality(item: Item) {
         decrementQltyIfGreaterThanMinQlty(item)
     }
@@ -84,6 +98,10 @@ class StandardItemQualityUpdater: QualityUpdater {
 }
 
 class BackstagePassQualityUpdater: ConditionalQualityUpdater {
+    func updateSellin(item: Item) {
+        decrementSellIn(item)
+    }
+    
     func updateQuality(item: Item) {
         if item.sellIn < 6 {
             increaseQualityByIfLessThanMaxQlty(3, item: item)
@@ -104,6 +122,10 @@ class BackstagePassQualityUpdater: ConditionalQualityUpdater {
 }
 
 class ConjuredItemQualityUpdater: ConditionalQualityUpdater {
+    func updateSellin(item: Item) {
+        decrementSellIn(item)
+    }
+    
     func updateQuality(item: Item) {
         decrementQualityBy2(item)
     }
@@ -123,6 +145,7 @@ class ConjuredItemQualityUpdater: ConditionalQualityUpdater {
 }
 
 protocol QualityUpdater {
+    func updateSellin(item: Item)
     func updateQuality(item: Item)
     func updateExpiredItem(_ item: Item)
     
@@ -172,7 +195,7 @@ class ItemUpdateOrchestrator<Handler: QualityUpdater>: ItemUpdatingStrategy {
     
     func updateItem(item: Item) {
         handler.updateQuality(item: item)
-        handler.decrementSellIn(item)
+        handler.updateSellin(item: item)
         if handler.isExpired(item) {
             handler.updateExpiredItem(item)
         }
