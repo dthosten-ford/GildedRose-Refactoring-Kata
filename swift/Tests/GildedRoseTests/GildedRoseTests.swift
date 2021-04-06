@@ -2,17 +2,21 @@
 import XCTest
 
 class GildedRoseTests: XCTestCase {
+    
+    var regularItem: Item { Item(name: "regular", sellIn: 25, quality: 25) }
 
-    func testFoo() {
-        let items = [Item(name: "foo", sellIn: 0, quality: 0)]
-        let app = GildedRose(items: items);
+    func test_regularItem_qualityShouldDecreaseByOne() {
+        let items = [regularItem]
+        let app = GildedRose(items: items)
         app.updateQuality();
-        XCTAssertEqual("fixme", app.items[0].name);
+        XCTAssertEqual(items[0].quality, regularItem.quality - 1)
     }
-
-    static var allTests : [(String, (GildedRoseTests) -> () throws -> Void)] {
-        return [
-            ("testFoo", testFoo),
-        ]
+    
+    func test_regualItem_sellInShouldBeSomething() {
+        let items = [regularItem]
+        let app = GildedRose(items: items)
+        app.updateQuality();
+        XCTAssertEqual(items[0].sellIn, regularItem.sellIn - 1)
     }
+    
 }
