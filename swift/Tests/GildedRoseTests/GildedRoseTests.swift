@@ -41,6 +41,19 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(updatedItem.quality, backstagePass.quality + 1)
     }
     
+    func test_backstagePass_sellInShouldDecreaseBy1() {
+        let updatedItem = update(item: backstagePass)
+        XCTAssertEqual(updatedItem.sellIn, backstagePass.sellIn - 1)
+    }
+    
+    //TODO: start from here
+    func test_backstagePass_expired() {
+        let expiredBackstagePass = backstagePass
+        expiredBackstagePass.sellIn = 0
+        let updatedItem = update(item: expiredBackstagePass)
+        XCTAssertEqual(updatedItem.quality, expiredBackstagePass.quality)
+    }
+    
     fileprivate func update(item: Item) -> Item {
         let items = [item]
         let app = GildedRose(items: items)
