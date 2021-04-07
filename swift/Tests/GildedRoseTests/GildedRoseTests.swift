@@ -2,9 +2,9 @@
 import XCTest
 
 class GildedRoseTests: XCTestCase {
-    var regularItem: Item { Item(name: "regular", sellIn: 25, quality: 25) }
-    var sulfurasItem: Item { Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 25, quality: 25) }
-    var agedBrie: Item { Item(name: "Aged Brie", sellIn: 25, quality: 25) }
+    var regularItem: Item { Item(name: "regular", sellIn: 10, quality: 15) }
+    var sulfurasItem: Item { Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
+    var agedBrie: Item { Item(name: "Aged Brie", sellIn: 2, quality: 8) }
  
     func test_regularItem_qualityShouldDecreaseBy1() {
         XCTAssertEqual(update(item: regularItem).quality, regularItem.quality - 1)
@@ -28,6 +28,11 @@ class GildedRoseTests: XCTestCase {
     func test_agedBrie_qualityShouldIncreaseBy1() {
         let updatedItem = update(item: agedBrie)
         XCTAssertEqual(updatedItem.quality, agedBrie.quality + 1)
+    }
+    
+    func test_agedBrie_sellInShouldDecreaseBy1() {
+        let updatedItem = update(item: agedBrie)
+        XCTAssertEqual(updatedItem.sellIn, agedBrie.sellIn - 1)
     }
     
     fileprivate func update(item: Item) -> Item {
