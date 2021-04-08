@@ -46,16 +46,15 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(updatedItem.sellIn, backstagePass.sellIn - 1)
     }
     
-    //TODO: start from here
-    func test_backstagePass_expired() {
-        let expiredBackstagePass = backstagePass
-        expiredBackstagePass.sellIn = 0
+    func test_expiredBackstagePass_qualityShouldbe0() {
+        let expiredBackstagePass = Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 0, quality: 25)
         let updatedItem = update(item: expiredBackstagePass)
-        XCTAssertEqual(updatedItem.quality, expiredBackstagePass.quality)
+        XCTAssertEqual(updatedItem.quality, 0)
     }
     
     fileprivate func update(item: Item) -> Item {
-        let items = [item]
+        let copy = Item(name: item.name, sellIn: item.sellIn, quality: item.quality)
+        let items = [copy]
         let app = GildedRose(items: items)
         app.updateQuality()
         return items[0]
