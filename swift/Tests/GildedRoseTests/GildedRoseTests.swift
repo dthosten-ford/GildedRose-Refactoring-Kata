@@ -43,11 +43,13 @@ class GildedRoseTests: XCTestCase {
     
     func test_backstagePass_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: backstagePass)
-        XCTAssertEqual(updatedItem.sellIn, backstagePass.sellIn - 1)
+//        XCTAssertEqual(updatedItem.sellIn, backstagePass.sellIn - 1)
+        assertDifference(original: backstagePass.sellIn, new: updatedItem.sellIn, expectedDifference: -2)
     }
     
     func test_expiredBackstagePass_qualityShouldbe0() {
-        let expiredBackstagePass = Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 0, quality: 25)
+        let expiredBackstagePass = backstagePass
+        expiredBackstagePass.sellIn = 0
         let updatedItem = update(item: expiredBackstagePass)
         XCTAssertEqual(updatedItem.quality, 0)
     }
@@ -59,4 +61,13 @@ class GildedRoseTests: XCTestCase {
         app.updateQuality()
         return items[0]
     }
+}
+
+fileprivate func assertDifference(
+        original: Int,
+        new: Int,
+        expectedDifference: Int
+) {
+    let difference = new - original
+    XCTAssertEqual(difference, expectedDifference)
 }
