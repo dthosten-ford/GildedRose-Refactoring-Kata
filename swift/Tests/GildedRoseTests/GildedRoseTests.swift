@@ -18,33 +18,32 @@ class GildedRoseTests: XCTestCase {
     
     func test_sulfurasItem_sellInShouldBeUnchanged() {
         let updatedItem = update(item: sulfurasItem)
-        XCTAssertEqual(updatedItem.sellIn, sulfurasItem.sellIn)
+        assertDifference(original: sulfurasItem.sellIn, new: updatedItem.sellIn, expectedDifference: 0)
     }
     
     func test_sulfurasItem_qualityShouldBeUnchanged() {
         let updatedItem = update(item: sulfurasItem)
-        XCTAssertEqual(updatedItem.quality, sulfurasItem.quality)
+        assertDifference(original: sulfurasItem.quality, new: updatedItem.quality, expectedDifference: 0)
     }
     
     func test_agedBrie_qualityShouldIncreaseBy1() {
         let updatedItem = update(item: agedBrie)
-        XCTAssertEqual(updatedItem.quality, agedBrie.quality + 1)
+        assertDifference(original: agedBrie.quality, new: updatedItem.quality, expectedDifference: 1)
     }
     
     func test_agedBrie_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: agedBrie)
-        XCTAssertEqual(updatedItem.sellIn, agedBrie.sellIn - 1)
+        assertDifference(original: agedBrie.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
     }
 
     func test_backstagePass_qualityShouldIncreaseBy1() {
         let updatedItem = update(item: backstagePass)
-        XCTAssertEqual(updatedItem.quality, backstagePass.quality + 1)
+        assertDifference(original: backstagePass.quality, new: updatedItem.quality, expectedDifference: 1)
     }
     
     func test_backstagePass_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: backstagePass)
-//        XCTAssertEqual(updatedItem.sellIn, backstagePass.sellIn - 1)
-        assertDifference(original: backstagePass.sellIn, new: updatedItem.sellIn, expectedDifference: -2)
+        assertDifference(original: backstagePass.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
     }
     
     func test_expiredBackstagePass_qualityShouldbe0() {
