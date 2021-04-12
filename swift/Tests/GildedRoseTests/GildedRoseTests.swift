@@ -68,6 +68,10 @@ class GildedRoseTests: XCTestCase {
         assertDifference(original: backStagePassWithFiveDaysOrLessLeft.quality, new: updatedItem.quality, expectedDifference: 3)
     }
     
+    func test_backstagePass_AfterTheConcert_QualityDropsToZero() {
+        
+    }
+    
     fileprivate func update(item: Item) -> Item {
         let copy = Item(name: item.name, sellIn: item.sellIn, quality: item.quality)
         let items = [copy]
