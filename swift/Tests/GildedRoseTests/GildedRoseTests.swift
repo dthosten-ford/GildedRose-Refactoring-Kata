@@ -55,7 +55,10 @@ class GildedRoseTests: XCTestCase {
     }
 
     func test_backstagePass_withTenDaysLeft_QualityShouldIncreaseBy2() {
-        
+        let backStagePass = backstagePass
+        backstagePass.sellIn = 5
+        let updatedItem = update(item: backstagePass)
+        assertDifference(original: backstagePass.quality, new: updatedItem.quality, expectedDifference: 10)
     }
     
     fileprivate func update(item: Item) -> Item {
