@@ -17,10 +17,11 @@ class GildedRoseTests: XCTestCase {
         assertDifference(original: regularItem.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
     }
     
-    func test_regular_Item_expired() {
+    func test_regularItem_expired() {
         let expiredRegularItem = regularItem
         expiredRegularItem.sellIn = 0
         let updatedItem: Item = update(item: expiredRegularItem)
+        assertDifference(original: expiredRegularItem.quality, new: updatedItem.quality, expectedDifference: -2)
     }
     
     func test_sulfurasItem_sellInShouldBeUnchanged() {
