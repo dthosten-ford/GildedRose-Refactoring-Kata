@@ -17,7 +17,7 @@ class GildedRoseTests: XCTestCase {
         assertDifference(original: regularItem.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
     }
     
-    func test_regularItem_expired() {
+    func test_expiredRegularItem_qualityDecreaseBy2() {
         let expiredRegularItem = regularItem
         expiredRegularItem.sellIn = 0
         let updatedItem: Item = update(item: expiredRegularItem)
@@ -42,6 +42,13 @@ class GildedRoseTests: XCTestCase {
     func test_agedBrie_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: agedBrie)
         assertDifference(original: agedBrie.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
+    }
+    
+    func test_agedBrie_qualityShouldIncreaseBy() {
+        let expiredAgedBrie = agedBrie
+        expiredAgedBrie.sellIn = 0
+        let updatedItem = update(item: expiredAgedBrie)
+        assertDifference(original: agedBrie.quality, new: updatedItem.quality, expectedDifference: 1)
     }
 
     func test_backstagePass_qualityShouldIncreaseBy1() {
