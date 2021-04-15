@@ -38,22 +38,18 @@ public class GildedRose {
 
             if item.name == agedBrie {
                 incrementQualityBy1(item)
-            } else if (item.name != backstage) {
-                decrementQualityBy1(item)
-            } else {
-                if (item.quality < maxItemQuality) {
-                    item.quality = item.quality + 1
-                    
-                    if (item.name == backstage) {
-                        if (item.sellIn < 11) {
-                            incrementQualityBy1(item)
-                        }
-                        
-                        if (item.sellIn < 6) {
-                            incrementQualityBy1(item)
-                        }
-                    }
+            } else if (item.name == backstage) {
+                incrementQualityBy1(item)
+
+                if (item.sellIn < 11) {
+                    incrementQualityBy1(item)
                 }
+
+                if (item.sellIn < 6) {
+                    incrementQualityBy1(item)
+                }
+            } else {
+                decrementQualityBy1(item)
             }
             
             item.sellIn = item.sellIn - 1
