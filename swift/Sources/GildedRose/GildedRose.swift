@@ -36,7 +36,9 @@ public class GildedRose {
                 continue
             }
 
-            if (item.name != agedBrie && item.name != backstage) {
+            if item.name == agedBrie {
+                incrementQualityBy1(item)
+            } else if (item.name != backstage) {
                 decrementQualityBy1(item)
             } else {
                 if (item.quality < maxItemQuality) {
