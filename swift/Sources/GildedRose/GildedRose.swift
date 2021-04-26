@@ -31,27 +31,27 @@ protocol ItemStrategyProvider {
 }
 
 class StrategyProvider: ItemStrategyProvider {
+    private let sulfuras = "Sulfuras, Hand of Ragnaros"
+    private let agedBrie = "Aged Brie"
+
     func strategyForItem(_ item: Item) -> ItemUpdater {
-        if (item.name == "Sulfuras, Hand of Ragnaros") {
-            return StrategyForSulfuras()
+        if (item.name == sulfuras) {
+            return DoNothingStrategy()
+        }
+        if item.name == agedBrie {
+           return AgedBrieStrategy()
         }
         return LegacyItemUpdater()
     }
-
 }
 
 class LegacyItemUpdater: ItemUpdater {
     private let maxItemQuality = 50
     private let minItemQuality = 0
-    private let sulfuras = "Sulfuras, Hand of Ragnaros"
     private let agedBrie = "Aged Brie"
     private let backstage = "Backstage passes to a TAFKAL80ETC concert"
     
     func updateItem(_ item: Item) {
-        if (item.name == sulfuras) {
-            return
-        }
-
         if item.name == agedBrie {
             incrementQualityBy1(item)
         } else if (item.name == backstage) {
@@ -98,9 +98,37 @@ class LegacyItemUpdater: ItemUpdater {
     }
 }
 
-class StrategyForSulfuras: ItemUpdater {
-    func updateItem(_ item: Item) {
+class DoNothingStrategy: ItemUpdater {
+    func updateItem(_ item: Item) { }
+}
 
+cleanup the duplicate code
+
+class AgedBrieStrategy: ItemUpdater {
+    private let maxItemQuality = 50
+    private let minItemQuality = 0
+    
+    private func incrementQualityBy1(_ item: Item) {
+        if (item.quality < maxItemQuality) {
+            item.quality = item.quality + 1
+        }
     }
-
+    
+    private func decrementQualityBy1(_ item: Item) {
+        if (item.quality > minItemQuality) {
+            item.quality = item.quality - 1
+        }
+    }
+    
+    private func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+    
+    func updateItem(_ item: Item) {
+        incrementQualityBy1(item)
+        item.sellIn = item.sellIn - 1
+        if isExpired(item) {
+            incrementQualityBy1(item)
+        }
+    }
 }
