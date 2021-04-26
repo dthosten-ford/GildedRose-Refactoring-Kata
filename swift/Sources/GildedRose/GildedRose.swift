@@ -1,10 +1,6 @@
 public class GildedRose {
     var items:[Item]
-    private let maxItemQuality = 50
-    private let minItemQuality = 0
-    private let sulfuras = "Sulfuras, Hand of Ragnaros"
-    private let agedBrie = "Aged Brie"
-    private let backstage = "Backstage passes to a TAFKAL80ETC concert"
+
     private let startegyProvider: ItemStrategyProvider = StrategyProvider()
     
     public init(items:[Item]) {
@@ -18,23 +14,7 @@ public class GildedRose {
     // ✅ Extract repetitive functionality into methods
     // ✅ Rename indexer form array of items
     // *
-    
-    private func incrementQualityBy1(_ item: Item) {
-        if (item.quality < maxItemQuality) {
-            item.quality = item.quality + 1
-        }
-    }
-    
-    private func decrementQualityBy1(_ item: Item) {
-        if (item.quality > minItemQuality) {
-            item.quality = item.quality - 1
-        }
-    }
-    
-    fileprivate func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
-    }
-    
+
     public func updateQuality() {
         for item in items {
             startegyProvider.strategyForItem(item).updateItem(item)
@@ -52,8 +32,12 @@ protocol ItemStrategyProvider {
 
 class StrategyProvider: ItemStrategyProvider {
     func strategyForItem(_ item: Item) -> ItemUpdater {
-        LegacyItemUpdater()
+        if (item.name == "Sulfuras, Hand of Ragnaros") {
+            return StrategyForSulfuras()
+        }
+        return LegacyItemUpdater()
     }
+
 }
 
 class LegacyItemUpdater: ItemUpdater {
@@ -112,4 +96,11 @@ class LegacyItemUpdater: ItemUpdater {
     fileprivate func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
+}
+
+class StrategyForSulfuras: ItemUpdater {
+    func updateItem(_ item: Item) {
+
+    }
+
 }
