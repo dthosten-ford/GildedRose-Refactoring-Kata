@@ -33,6 +33,7 @@ protocol ItemStrategyProvider {
 class StrategyProvider: ItemStrategyProvider {
     private let sulfuras = "Sulfuras, Hand of Ragnaros"
     private let agedBrie = "Aged Brie"
+    private let backstage = "Backstage passes to a TAFKAL80ETC concert"
 
     func strategyForItem(_ item: Item) -> ItemUpdater {
         if (item.name == sulfuras) {
@@ -41,6 +42,9 @@ class StrategyProvider: ItemStrategyProvider {
         if item.name == agedBrie {
            return AgedBrieStrategy()
         }
+        if item.name == backstage {
+            return BackstageStrategy()
+        }
         return LegacyItemUpdater()
     }
 }
@@ -48,13 +52,10 @@ class StrategyProvider: ItemStrategyProvider {
 class LegacyItemUpdater: ItemUpdater {
     private let maxItemQuality = 50
     private let minItemQuality = 0
-    private let agedBrie = "Aged Brie"
     private let backstage = "Backstage passes to a TAFKAL80ETC concert"
     
     func updateItem(_ item: Item) {
-        if item.name == agedBrie {
-            incrementQualityBy1(item)
-        } else if (item.name == backstage) {
+        if (item.name == backstage) {
             incrementQualityBy1(item)
 
             if (item.sellIn < 11) {
@@ -71,9 +72,7 @@ class LegacyItemUpdater: ItemUpdater {
         item.sellIn = item.sellIn - 1
         
         if isExpired(item) {
-            if (item.name == agedBrie) {
-                incrementQualityBy1(item)
-            } else if (item.name == backstage) {
+            if (item.name == backstage) {
                 item.quality = item.quality - item.quality
             } else {
                 decrementQualityBy1(item)
@@ -102,8 +101,6 @@ class DoNothingStrategy: ItemUpdater {
     func updateItem(_ item: Item) { }
 }
 
-cleanup the duplicate code
-
 class AgedBrieStrategy: ItemUpdater {
     private let maxItemQuality = 50
     private let minItemQuality = 0
@@ -130,5 +127,45 @@ class AgedBrieStrategy: ItemUpdater {
         if isExpired(item) {
             incrementQualityBy1(item)
         }
+    }
+}
+
+class BackstageStrategy: ItemUpdater {
+    private let maxItemQuality = 50
+    private let minItemQuality = 0
+    private let backstage = "Backstage passes to a TAFKAL80ETC concert"
+    
+    func updateItem(_ item: Item) {
+        incrementQualityBy1(item)
+
+        if (item.sellIn < 11) {
+            incrementQualityBy1(item)
+        }
+
+        if (item.sellIn < 6) {
+            incrementQualityBy1(item)
+        }
+        
+        item.sellIn = item.sellIn - 1
+        
+        if isExpired(item) {
+            item.quality = item.quality - item.quality
+        }
+    }
+    
+    private func incrementQualityBy1(_ item: Item) {
+        if (item.quality < maxItemQuality) {
+            item.quality = item.quality + 1
+        }
+    }
+    
+    private func decrementQualityBy1(_ item: Item) {
+        if (item.quality > minItemQuality) {
+            item.quality = item.quality - 1
+        }
+    }
+    
+    private func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
     }
 }
