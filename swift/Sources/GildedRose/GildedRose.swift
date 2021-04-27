@@ -50,20 +50,17 @@ class StrategyProvider: ItemStrategyProvider {
 }
 
 class RegularItemUpdater: ItemUpdater {
+    pass item in Init
     private let mutator = IncrementDecrementHolder()
     
     func updateItem(_ item: Item) {
         mutator.decrementQualityBy1(item)
         
-        item.sellIn = item.sellIn - 1
+        mutator.decrementSellIn(item)
         
-        if isExpired(item) {
+        if mutator.isExpired(item) {
             mutator.decrementQualityBy1(item)
         }
-    }
-    
-    fileprivate func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
     }
 }
 
@@ -74,14 +71,10 @@ class DoNothingStrategy: ItemUpdater {
 class AgedBrieStrategy: ItemUpdater {
     private let mutator = IncrementDecrementHolder()
     
-    private func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
-    }
-    
     func updateItem(_ item: Item) {
         mutator.incrementQualityBy1(item)
-        item.sellIn = item.sellIn - 1
-        if isExpired(item) {
+        mutator.decrementSellIn(item)
+        if mutator.isExpired(item) {
             mutator.incrementQualityBy1(item)
         }
     }
@@ -89,7 +82,6 @@ class AgedBrieStrategy: ItemUpdater {
 
 class BackstageStrategy: ItemUpdater {
     let incDecMutator = IncrementDecrementHolder()
-    private let backstage = "Backstage passes to a TAFKAL80ETC concert"
     
     func updateItem(_ item: Item) {
 
@@ -102,16 +94,11 @@ class BackstageStrategy: ItemUpdater {
             incDecMutator.incrementQualityBy1(item)
         }
         
-        item.sellIn = item.sellIn - 1
+        incDecMutator.decrementSellIn(item)
         
-        if isExpired(item) {
+        if incDecMutator.isExpired(item) {
             item.quality = item.quality - item.quality
         }
-    }
-
-    
-    private func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
     }
 }
 
@@ -129,5 +116,13 @@ class IncrementDecrementHolder {
         if (item.quality > minItemQuality) {
             item.quality = item.quality - 1
         }
+    }
+    
+    func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+    
+    func decrementSellIn(_ item: Item) {
+        item.sellIn -= 1
     }
 }
