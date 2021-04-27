@@ -40,7 +40,7 @@ class StrategyProvider: ItemStrategyProvider {
             return DoNothingStrategy()
         }
         if item.name == agedBrie {
-           return AgedBrieStrategy()
+            return AgedBrieStrategy()
         }
         if item.name == backstage {
             return BackstageStrategy()
@@ -131,19 +131,18 @@ class AgedBrieStrategy: ItemUpdater {
 }
 
 class BackstageStrategy: ItemUpdater {
-    private let maxItemQuality = 50
-    private let minItemQuality = 0
+    let incDecMutator = IncrementDecrementHolder()
     private let backstage = "Backstage passes to a TAFKAL80ETC concert"
     
     func updateItem(_ item: Item) {
-        incrementQualityBy1(item)
 
+        incDecMutator.incrementQualityBy1(item)
         if (item.sellIn < 11) {
-            incrementQualityBy1(item)
+            incDecMutator.incrementQualityBy1(item)
         }
 
         if (item.sellIn < 6) {
-            incrementQualityBy1(item)
+            incDecMutator.incrementQualityBy1(item)
         }
         
         item.sellIn = item.sellIn - 1
@@ -152,20 +151,27 @@ class BackstageStrategy: ItemUpdater {
             item.quality = item.quality - item.quality
         }
     }
+
     
-    private func incrementQualityBy1(_ item: Item) {
+    private func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
+    }
+}
+
+class IncrementDecrementHolder {
+
+    private let maxItemQuality = 50
+    private let minItemQuality = 0
+
+    func incrementQualityBy1(_ item: Item) {
         if (item.quality < maxItemQuality) {
             item.quality = item.quality + 1
         }
     }
-    
-    private func decrementQualityBy1(_ item: Item) {
+
+    func decrementQualityBy1(_ item: Item) {
         if (item.quality > minItemQuality) {
             item.quality = item.quality - 1
         }
-    }
-    
-    private func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
     }
 }
