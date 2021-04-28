@@ -29,14 +29,11 @@ public class GildedRose {
         return item.sellIn < 0
     }
 }
+introduce separate methods to update sellIn and updateQuality
 
 protocol ItemUpdater {
     func updateItem(_ item: Item)
     func updateExpiredItem(_ item: Item)
-}
-
-extension ItemUpdater {
-    func updateExpiredItem(_ item: Item) { }
 }
 
 protocol ItemStrategyProvider {
@@ -82,6 +79,7 @@ class RegularItemUpdater: ItemUpdater {
 
 class DoNothingStrategy: ItemUpdater {
     func updateItem(_ item: Item) { }
+    func updateExpiredItem(_ item: Item) {}
 }
 
 class AgedBrieStrategy: ItemUpdater {
@@ -91,12 +89,13 @@ class AgedBrieStrategy: ItemUpdater {
         self.mutator = mutator
     }
     
+    func updateExpiredItem(_ item: Item) {
+        mutator.incrementQualityBy1(item)
+    }
+    
     func updateItem(_ item: Item) {
         mutator.incrementQualityBy1(item)
         mutator.decrementSellIn(item)
-        if mutator.isExpired(item) {
-            mutator.incrementQualityBy1(item)
-        }
     }
 }
 
@@ -105,6 +104,10 @@ class BackstageStrategy: ItemUpdater {
 
     init(mutator: IncrementDecrementHolder) {
         self.mutator = mutator
+    }
+    
+    func updateExpiredItem(_ item: Item) {
+        item.quality = item.quality - item.quality
     }
     
     func updateItem(_ item: Item) {
@@ -119,10 +122,6 @@ class BackstageStrategy: ItemUpdater {
         }
         
         mutator.decrementSellIn(item)
-        
-        if mutator.isExpired(item) {
-            item.quality = item.quality - item.quality
-        }
     }
 }
 
@@ -140,10 +139,6 @@ class IncrementDecrementHolder {
         if (item.quality > minItemQuality) {
             item.quality = item.quality - 1
         }
-    }
-    
-    func isExpired(_ item: Item) -> Bool {
-        return item.sellIn < 0
     }
     
     func decrementSellIn(_ item: Item) {
