@@ -17,13 +17,26 @@ public class GildedRose {
 
     public func updateQuality() {
         for item in items {
-            startegyProvider.strategyForItem(item).updateItem(item)
+            let strategy: ItemUpdater = startegyProvider.strategyForItem(item)
+            strategy.updateItem(item)
+            if isExpired(item) {
+                strategy.updateExpiredItem(item)
+            }
         }
+    }
+
+    func isExpired(_ item: Item) -> Bool {
+        return item.sellIn < 0
     }
 }
 
 protocol ItemUpdater {
     func updateItem(_ item: Item)
+    func updateExpiredItem(_ item: Item)
+}
+
+extension ItemUpdater {
+    func updateExpiredItem(_ item: Item) { }
 }
 
 protocol ItemStrategyProvider {
@@ -59,12 +72,11 @@ class RegularItemUpdater: ItemUpdater {
     
     func updateItem(_ item: Item) {
         mutator.decrementQualityBy1(item)
-        
         mutator.decrementSellIn(item)
-        
-        if mutator.isExpired(item) {
-            mutator.decrementQualityBy1(item)
-        }
+    }
+    
+    func updateExpiredItem(_ item: Item) {
+        mutator.decrementQualityBy1(item)
     }
 }
 
