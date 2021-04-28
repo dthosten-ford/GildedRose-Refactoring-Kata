@@ -41,10 +41,10 @@ class StrategyProvider: ItemStrategyProvider {
             return DoNothingStrategy()
         }
         if item.name == agedBrie {
-            return AgedBrieStrategy()
+            return AgedBrieStrategy(mutator: mutator)
         }
         if item.name == backstage {
-            return BackstageStrategy()
+            return BackstageStrategy(mutator: mutator)
         }
         return RegularItemUpdater(mutator: mutator)
     }
@@ -73,7 +73,11 @@ class DoNothingStrategy: ItemUpdater {
 }
 
 class AgedBrieStrategy: ItemUpdater {
-    private let mutator = IncrementDecrementHolder()
+    private let mutator: IncrementDecrementHolder
+
+    init(mutator: IncrementDecrementHolder) {
+        self.mutator = mutator
+    }
     
     func updateItem(_ item: Item) {
         mutator.incrementQualityBy1(item)
@@ -85,22 +89,26 @@ class AgedBrieStrategy: ItemUpdater {
 }
 
 class BackstageStrategy: ItemUpdater {
-    let incDecMutator = IncrementDecrementHolder()
+    private let mutator: IncrementDecrementHolder
+
+    init(mutator: IncrementDecrementHolder) {
+        self.mutator = mutator
+    }
     
     func updateItem(_ item: Item) {
 
-        incDecMutator.incrementQualityBy1(item)
+        mutator.incrementQualityBy1(item)
         if (item.sellIn < 11) {
-            incDecMutator.incrementQualityBy1(item)
+            mutator.incrementQualityBy1(item)
         }
 
         if (item.sellIn < 6) {
-            incDecMutator.incrementQualityBy1(item)
+            mutator.incrementQualityBy1(item)
         }
         
-        incDecMutator.decrementSellIn(item)
+        mutator.decrementSellIn(item)
         
-        if incDecMutator.isExpired(item) {
+        if mutator.isExpired(item) {
             item.quality = item.quality - item.quality
         }
     }
