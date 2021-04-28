@@ -34,6 +34,7 @@ class StrategyProvider: ItemStrategyProvider {
     private let sulfuras = "Sulfuras, Hand of Ragnaros"
     private let agedBrie = "Aged Brie"
     private let backstage = "Backstage passes to a TAFKAL80ETC concert"
+    private let mutator = IncrementDecrementHolder()
 
     func strategyForItem(_ item: Item) -> ItemUpdater {
         if (item.name == sulfuras) {
@@ -45,13 +46,16 @@ class StrategyProvider: ItemStrategyProvider {
         if item.name == backstage {
             return BackstageStrategy()
         }
-        return RegularItemUpdater()
+        return RegularItemUpdater(mutator: mutator)
     }
 }
 
 class RegularItemUpdater: ItemUpdater {
-    pass item in Init
-    private let mutator = IncrementDecrementHolder()
+    private let mutator: IncrementDecrementHolder
+    
+    init(mutator: IncrementDecrementHolder) {
+        self.mutator = mutator
+    }
     
     func updateItem(_ item: Item) {
         mutator.decrementQualityBy1(item)
