@@ -30,7 +30,6 @@ public class GildedRose {
         return item.sellIn < 0
     }
 }
-//introduce separate methods to update sellIn and updateQuality
 
 protocol ItemUpdater {
     func updateQuality(_ item: Item)
@@ -118,16 +117,21 @@ class BackstageStrategy: ItemUpdater {
     }
     
     func updateQuality(_ item: Item) {
-
-        mutator.incrementQualityBy1(item)
-        if (item.sellIn < 11) {
-            mutator.incrementQualityBy1(item)
+        figure out magic numbers 6, 11, 3, 2, 1
+        let qualityChange: Int
+        switch item.sellIn {
+        case ..<6:
+            qualityChange = 3
+        case ..<11:
+            qualityChange = 2
+        default:
+            qualityChange = 1
         }
-
-        if (item.sellIn < 6) {
-            mutator.incrementQualityBy1(item)
-        }
-        
+        increaseQuality(by: qualityChange, item: item)
+    }
+    
+    private func increaseQuality(by amount: Int, item: Item) {
+        (0..<amount).forEach { _ in mutator.incrementQualityBy1(item) }
     }
 }
 
