@@ -18,10 +18,10 @@ public class GildedRose {
     public func updateQuality() {
         for item in items {
             let strategy: ItemUpdater = startegyProvider.strategyForItem(item)
-            strategy.updateItem(item)
+            strategy.updateQuality(item)
             strategy.updateSellin(item)
             if isExpired(item) {
-                strategy.updateExpiredItem(item)
+                strategy.updateExpiredQuality(item)
             }
         }
     }
@@ -33,9 +33,9 @@ public class GildedRose {
 //introduce separate methods to update sellIn and updateQuality
 
 protocol ItemUpdater {
-    func updateItem(_ item: Item)
-    func updateExpiredItem(_ item: Item)
+    func updateQuality(_ item: Item)
     func updateSellin(_ item: Item)
+    func updateExpiredQuality(_ item: Item)
 }
 
 extension ItemUpdater {
@@ -75,18 +75,18 @@ class RegularItemUpdater: ItemUpdater {
         self.mutator = mutator
     }
     
-    func updateItem(_ item: Item) {
+    func updateQuality(_ item: Item) {
         mutator.decrementQualityBy1(item)
     }
     
-    func updateExpiredItem(_ item: Item) {
+    func updateExpiredQuality(_ item: Item) {
         mutator.decrementQualityBy1(item)
     }
 }
 
 class DoNothingStrategy: ItemUpdater {
-    func updateItem(_ item: Item) { }
-    func updateExpiredItem(_ item: Item) {}
+    func updateQuality(_ item: Item) { }
+    func updateExpiredQuality(_ item: Item) {}
     func updateSellin(_ item: Item) { }
 }
 
@@ -97,11 +97,11 @@ class AgedBrieStrategy: ItemUpdater {
         self.mutator = mutator
     }
     
-    func updateExpiredItem(_ item: Item) {
+    func updateExpiredQuality(_ item: Item) {
         mutator.incrementQualityBy1(item)
     }
     
-    func updateItem(_ item: Item) {
+    func updateQuality(_ item: Item) {
         mutator.incrementQualityBy1(item)
     }
 }
@@ -113,11 +113,11 @@ class BackstageStrategy: ItemUpdater {
         self.mutator = mutator
     }
     
-    func updateExpiredItem(_ item: Item) {
+    func updateExpiredQuality(_ item: Item) {
         item.quality = item.quality - item.quality
     }
     
-    func updateItem(_ item: Item) {
+    func updateQuality(_ item: Item) {
 
         mutator.incrementQualityBy1(item)
         if (item.sellIn < 11) {
