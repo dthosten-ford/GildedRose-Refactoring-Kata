@@ -19,21 +19,28 @@ public class GildedRose {
         for item in items {
             let strategy: ItemUpdater = startegyProvider.strategyForItem(item)
             strategy.updateItem(item)
+            strategy.updateSellin(item)
             if isExpired(item) {
                 strategy.updateExpiredItem(item)
             }
         }
     }
-
+    
     func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
 }
-introduce separate methods to update sellIn and updateQuality
+//introduce separate methods to update sellIn and updateQuality
 
 protocol ItemUpdater {
     func updateItem(_ item: Item)
     func updateExpiredItem(_ item: Item)
+    func updateSellin(_ item: Item)
+}
+
+extension ItemUpdater {
+    func updateSellin(_ item: Item) {
+    }
 }
 
 protocol ItemStrategyProvider {
