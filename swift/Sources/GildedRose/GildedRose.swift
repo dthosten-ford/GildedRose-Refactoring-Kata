@@ -40,6 +40,7 @@ protocol ItemUpdater {
 
 extension ItemUpdater {
     func updateSellin(_ item: Item) {
+        item.sellIn -= 1
     }
 }
 
@@ -76,7 +77,6 @@ class RegularItemUpdater: ItemUpdater {
     
     func updateItem(_ item: Item) {
         mutator.decrementQualityBy1(item)
-        mutator.decrementSellIn(item)
     }
     
     func updateExpiredItem(_ item: Item) {
@@ -87,6 +87,7 @@ class RegularItemUpdater: ItemUpdater {
 class DoNothingStrategy: ItemUpdater {
     func updateItem(_ item: Item) { }
     func updateExpiredItem(_ item: Item) {}
+    func updateSellin(_ item: Item) { }
 }
 
 class AgedBrieStrategy: ItemUpdater {
@@ -102,7 +103,6 @@ class AgedBrieStrategy: ItemUpdater {
     
     func updateItem(_ item: Item) {
         mutator.incrementQualityBy1(item)
-        mutator.decrementSellIn(item)
     }
 }
 
@@ -128,7 +128,6 @@ class BackstageStrategy: ItemUpdater {
             mutator.incrementQualityBy1(item)
         }
         
-        mutator.decrementSellIn(item)
     }
 }
 
@@ -146,9 +145,5 @@ class IncrementDecrementHolder {
         if (item.quality > minItemQuality) {
             item.quality = item.quality - 1
         }
-    }
-    
-    func decrementSellIn(_ item: Item) {
-        item.sellIn -= 1
     }
 }
