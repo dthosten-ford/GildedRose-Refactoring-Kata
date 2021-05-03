@@ -106,8 +106,6 @@ class AgedBrieStrategy: ItemUpdater {
 }
 
 class BackstageStrategy: ItemUpdater {
-    private let endSoon = 5
-    private let upComing = 10
     private let mutator: IncrementDecrementHolder
 
     init(mutator: IncrementDecrementHolder) {
@@ -115,29 +113,24 @@ class BackstageStrategy: ItemUpdater {
     }
     
     func updateExpiredQuality(_ item: Item) {
+        this is hard to read
         item.quality = item.quality - item.quality
     }
     
-    fileprivate func getQualityChange(_ item: Item) -> Int {
-        var qualityChange: Int
-        
-        if item.sellIn <= endSoon {
-            return 3
-        }
-        
-        switch item.sellIn {
-        case ...endSoon:
+    fileprivate func getQualityChangeForDaysUntilConcert(_ daysUntilConcert: Int) -> Int {
+        let qualityChange: Int
+        if daysUntilConcert <= 5 {
             qualityChange = 3
-        case ...upComing:
+        } else if daysUntilConcert <= 10 {
             qualityChange = 2
-        default:
+        } else {
             qualityChange = 1
         }
         return qualityChange
     }
     
     func updateQuality(_ item: Item) {
-        let qualityChange = getQualityChange(item)
+        let qualityChange = getQualityChangeForDaysUntilConcert(item.sellIn)
         increaseQuality(by: qualityChange, item: item)
     }
     
