@@ -118,8 +118,13 @@ class BackstageStrategy: ItemUpdater {
         item.quality = item.quality - item.quality
     }
     
-    func updateQuality(_ item: Item) {
-        let qualityChange: Int
+    fileprivate func getQualityChange(_ item: Item) -> Int {
+        var qualityChange: Int
+        
+        if item.sellIn <= endSoon {
+            return 3
+        }
+        
         switch item.sellIn {
         case ...endSoon:
             qualityChange = 3
@@ -128,6 +133,11 @@ class BackstageStrategy: ItemUpdater {
         default:
             qualityChange = 1
         }
+        return qualityChange
+    }
+    
+    func updateQuality(_ item: Item) {
+        let qualityChange = getQualityChange(item)
         increaseQuality(by: qualityChange, item: item)
     }
     
