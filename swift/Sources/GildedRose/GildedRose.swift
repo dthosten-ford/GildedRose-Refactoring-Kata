@@ -106,6 +106,7 @@ class AgedBrieStrategy: ItemUpdater {
 }
 
 class BackstageStrategy: ItemUpdater {
+    private let margin = 6
     private let mutator: IncrementDecrementHolder
 
     init(mutator: IncrementDecrementHolder) {
@@ -117,10 +118,9 @@ class BackstageStrategy: ItemUpdater {
     }
     
     func updateQuality(_ item: Item) {
-        figure out magic numbers 6, 11, 3, 2, 1
         let qualityChange: Int
         switch item.sellIn {
-        case ..<6:
+        case ..<margin:
             qualityChange = 3
         case ..<11:
             qualityChange = 2
