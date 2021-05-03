@@ -106,7 +106,8 @@ class AgedBrieStrategy: ItemUpdater {
 }
 
 class BackstageStrategy: ItemUpdater {
-    private let margin = 6
+    private let endSoon = 5
+    private let upComing = 10
     private let mutator: IncrementDecrementHolder
 
     init(mutator: IncrementDecrementHolder) {
@@ -120,9 +121,9 @@ class BackstageStrategy: ItemUpdater {
     func updateQuality(_ item: Item) {
         let qualityChange: Int
         switch item.sellIn {
-        case ..<margin:
+        case ...endSoon:
             qualityChange = 3
-        case ..<11:
+        case ...upComing:
             qualityChange = 2
         default:
             qualityChange = 1
