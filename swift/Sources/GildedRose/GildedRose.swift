@@ -143,12 +143,13 @@ class BackstageStrategy: ItemUpdater {
 }
 
 class ConjuredItemStrategy: ItemUpdater {
+    test negative 0 quality
     func updateQuality(_ item: Item) {
         item.quality -= 2
     }
     
     func updateExpiredQuality(_ item: Item) {
-        
+        item.quality -= 2
     }
 }
 

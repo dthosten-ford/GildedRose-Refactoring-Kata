@@ -100,8 +100,10 @@ class GildedRoseTests: XCTestCase {
     }
 
     func test_expiredConjuredItem_QualityShouldDecreaseBy4() {
-        let updatedItem = update(item: conjuredItem)
-        assertDifference(original: conjuredItem.quality,
+        let expiredItem = conjuredItem
+        expiredItem.sellIn = 0
+        let updatedItem = update(item: expiredItem)
+        assertDifference(original: expiredItem.quality,
                          new: updatedItem.quality,
                          expectedDifference: -4)
     }
