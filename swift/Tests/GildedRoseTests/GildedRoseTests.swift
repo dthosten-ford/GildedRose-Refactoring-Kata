@@ -5,6 +5,7 @@ class GildedRoseTests: XCTestCase {
     var regularItem: Item { Item(name: "regular", sellIn: 10, quality: 15) }
     var sulfurasItem: Item { Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
     var agedBrie: Item { Item(name: "Aged Brie", sellIn: 2, quality: 8) }
+    var conjuredItem: Item { Item(name: "conjured", sellIn: 20, quality: 21) }
     var backstagePass: Item { Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 15, quality: 25)}
  
     func test_regularItem_qualityShouldDecreaseBy1() {
@@ -80,6 +81,15 @@ class GildedRoseTests: XCTestCase {
         backStagePassWithFiveDaysOrLessLeft.sellIn = 4
         let updatedItem = update(item: backStagePassWithFiveDaysOrLessLeft)
         assertDifference(original: backStagePassWithFiveDaysOrLessLeft.quality, new: updatedItem.quality, expectedDifference: 3)
+    }
+    
+    func test_nonExpiredConjuredItem_QualityShouldDecreaseBy2() {
+        let updatedItem = update(item: conjuredItem)
+        assertDifference(
+            original: conjuredItem.quality,
+            new: updatedItem.quality,
+            expectedDifference: -2
+        )
     }
     
     fileprivate func update(item: Item) -> Item {

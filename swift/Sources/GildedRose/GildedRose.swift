@@ -63,6 +63,9 @@ class StrategyProvider: ItemStrategyProvider {
         if item.name == backstage {
             return BackstageStrategy(mutator: mutator)
         }
+        if item.name == "conjured" {
+            return ConjuredItemStrategy()
+        }
         return RegularItemUpdater(mutator: mutator)
     }
 }
@@ -113,8 +116,7 @@ class BackstageStrategy: ItemUpdater {
     }
     
     func updateExpiredQuality(_ item: Item) {
-        this is hard to read
-        item.quality = item.quality - item.quality
+        item.quality = 0
     }
     
     fileprivate func getQualityChangeForDaysUntilConcert(_ daysUntilConcert: Int) -> Int {
@@ -136,6 +138,16 @@ class BackstageStrategy: ItemUpdater {
     
     private func increaseQuality(by amount: Int, item: Item) {
         (0..<amount).forEach { _ in mutator.incrementQualityBy1(item) }
+    }
+}
+
+class ConjuredItemStrategy: ItemUpdater {
+    func updateQuality(_ item: Item) {
+        item.quality -= 2
+    }
+    
+    func updateExpiredQuality(_ item: Item) {
+        
     }
 }
 
