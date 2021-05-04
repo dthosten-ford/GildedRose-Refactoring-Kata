@@ -91,6 +91,20 @@ class GildedRoseTests: XCTestCase {
             expectedDifference: -2
         )
     }
+
+    func test_nonExpiredConjuredItem_sellInShouldDecreaseBy1() {
+        let updatedItem = update(item: conjuredItem)
+        assertDifference(original: conjuredItem.sellIn,
+                         new: updatedItem.sellIn,
+                         expectedDifference: -1)
+    }
+
+    func test_expiredConjuredItem_QualityShouldDecreaseBy4() {
+        let updatedItem = update(item: conjuredItem)
+        assertDifference(original: conjuredItem.quality,
+                         new: updatedItem.quality,
+                         expectedDifference: -4)
+    }
     
     fileprivate func update(item: Item) -> Item {
         let copy = Item(name: item.name, sellIn: item.sellIn, quality: item.quality)
