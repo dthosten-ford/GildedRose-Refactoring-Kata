@@ -102,10 +102,12 @@ class GildedRoseTests: XCTestCase {
 }
 
 fileprivate func assertDifference(
-        original: Int,
-        new: Int,
-        expectedDifference: Int
+    original: Int,
+    new: Int,
+    expectedDifference: Int,
+    file: StaticString = #filePath,
+    line: UInt = #line
 ) {
     let difference = new - original
-    XCTAssertEqual(difference, expectedDifference)
+    XCTAssertEqual(difference, expectedDifference, file: file, line: line)
 }

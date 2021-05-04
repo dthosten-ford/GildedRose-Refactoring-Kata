@@ -51,6 +51,7 @@ class StrategyProvider: ItemStrategyProvider {
     private let sulfuras = "Sulfuras, Hand of Ragnaros"
     private let agedBrie = "Aged Brie"
     private let backstage = "Backstage passes to a TAFKAL80ETC concert"
+    private let conjured = "conjured"
     private let mutator = IncrementDecrementHolder()
 
     func strategyForItem(_ item: Item) -> ItemUpdater {
@@ -63,7 +64,7 @@ class StrategyProvider: ItemStrategyProvider {
         if item.name == backstage {
             return BackstageStrategy(mutator: mutator)
         }
-        if item.name == "conjured" {
+        if item.name == conjured {
             return ConjuredItemStrategy()
         }
         return RegularItemUpdater(mutator: mutator)
