@@ -120,7 +120,7 @@ class GildedRoseTests: XCTestCase {
         let expiredItem = conjuredItem
         expiredItem.sellIn = 0
         expiredItem.quality = 3
-        
+        test collection instead of classes
         let updatedItem = update(item: expiredItem)
         XCTAssertEqual(updatedItem.quality, 0)
     }
