@@ -138,7 +138,7 @@ class BackstageStrategy: ItemUpdater {
     }
     
     private func increaseQuality(by amount: Int, item: Item) {
-        (0..<amount).forEach { _ in mutator.incrementQualityBy1(item) }
+        mutator.increaseQualityByAmount(amount, item)
     }
 }
 
@@ -154,8 +154,7 @@ class ConjuredItemStrategy: ItemUpdater {
     }
     
     func updateExpiredQuality(_ item: Item) {
-        mutator.decrementQualityBy1(item)
-        mutator.decrementQualityBy1(item)
+        mutator.decreaseQualityByAmount(2, item)
     }
 }
 
@@ -163,15 +162,21 @@ class IncrementDecrementHolder {
     private let maxItemQuality = 50
     private let minItemQuality = 0
 
-    func incrementQualityBy1(_ item: Item) {
+    func increaseQualityByAmount(_ amount: Int, _ item: Item) {
         if (item.quality < maxItemQuality) {
-            item.quality = item.quality + 1
+            item.quality = item.quality + amount
         }
     }
+    
+    func incrementQualityBy1(_ item: Item) {
+        increaseQualityByAmount(1, item)
+    }
 
+    func decreaseQualityByAmount(_ amount: Int, _ item: Item) {
+        item.quality = max(item.quality - amount, minItemQuality)
+    }
+    
     func decrementQualityBy1(_ item: Item) {
-        if (item.quality > minItemQuality) {
-            item.quality = item.quality - 1
-        }
+        decreaseQualityByAmount(1, item)
     }
 }
