@@ -83,6 +83,14 @@ class GildedRoseTests: XCTestCase {
         assertDifference(original: backStagePassWithFiveDaysOrLessLeft.quality, new: updatedItem.quality, expectedDifference: 3)
     }
     
+    func test_backstagePass_WithQualityAlmostMax_ShouldNotIncreaseAbove50() {
+        let backstagePassWitAlmostMaxQuality = backstagePass
+        backstagePassWitAlmostMaxQuality.quality = 49
+        backstagePassWitAlmostMaxQuality.sellIn = 9
+        let updateItem = update(item: backstagePassWitAlmostMaxQuality)
+        XCTAssertEqual(updateItem.quality, 50)
+    }
+    
     func test_nonExpiredConjuredItem_QualityShouldDecreaseBy2() {
         let updatedItem = update(item: conjuredItem)
         assertDifference(

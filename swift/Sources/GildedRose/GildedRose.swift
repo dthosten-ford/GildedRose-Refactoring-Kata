@@ -163,9 +163,7 @@ class IncrementDecrementHolder {
     private let minItemQuality = 0
 
     func increaseQualityByAmount(_ amount: Int, _ item: Item) {
-        if (item.quality < maxItemQuality) {
-            item.quality = item.quality + amount
-        }
+        item.quality = min(item.quality + amount, maxItemQuality)
     }
     
     func incrementQualityBy1(_ item: Item) {
