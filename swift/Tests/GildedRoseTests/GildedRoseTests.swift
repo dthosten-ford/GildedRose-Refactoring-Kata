@@ -125,6 +125,14 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(updatedItem.quality, 0)
     }
     
+    func test_conjuredItem_QualityShouldNotBeLessThan0() {
+        let item = conjuredItem
+        item.quality = 1
+        
+        let updatedItem = update(item: item)
+        XCTAssertEqual(updatedItem.quality, 0)
+    }
+    
     fileprivate func update(item: Item) -> Item {
         let copy = Item(name: item.name, sellIn: item.sellIn, quality: item.quality)
         let items = [copy]

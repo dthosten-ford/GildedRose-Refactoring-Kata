@@ -150,7 +150,7 @@ class ConjuredItemStrategy: ItemUpdater {
     }
     
     func updateQuality(_ item: Item) {
-        item.quality -= 2
+        mutator.decreaseQualityByAmount(2, item)
     }
     
     func updateExpiredQuality(_ item: Item) {
