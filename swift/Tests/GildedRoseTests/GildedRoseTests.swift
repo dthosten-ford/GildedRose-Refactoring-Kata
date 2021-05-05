@@ -108,6 +108,15 @@ class GildedRoseTests: XCTestCase {
                          expectedDifference: -4)
     }
     
+    func test_expiredConjuredItem_QualityShouldNotBeLessThan0() {
+        let expiredItem = conjuredItem
+        expiredItem.sellIn = 0
+        expiredItem.quality = 3
+        
+        let updatedItem = update(item: expiredItem)
+        XCTAssertEqual(updatedItem.quality, 0)
+    }
+    
     fileprivate func update(item: Item) -> Item {
         let copy = Item(name: item.name, sellIn: item.sellIn, quality: item.quality)
         let items = [copy]

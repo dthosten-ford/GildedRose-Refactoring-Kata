@@ -65,7 +65,7 @@ class StrategyProvider: ItemStrategyProvider {
             return BackstageStrategy(mutator: mutator)
         }
         if item.name == conjured {
-            return ConjuredItemStrategy()
+            return ConjuredItemStrategy(mutator: mutator)
         }
         return RegularItemUpdater(mutator: mutator)
     }
@@ -143,13 +143,19 @@ class BackstageStrategy: ItemUpdater {
 }
 
 class ConjuredItemStrategy: ItemUpdater {
-    test negative 0 quality
+    private let mutator: IncrementDecrementHolder
+
+    init(mutator: IncrementDecrementHolder) {
+        self.mutator = mutator
+    }
+    
     func updateQuality(_ item: Item) {
         item.quality -= 2
     }
     
     func updateExpiredQuality(_ item: Item) {
-        item.quality -= 2
+        mutator.decrementQualityBy1(item)
+        mutator.decrementQualityBy1(item)
     }
 }
 
