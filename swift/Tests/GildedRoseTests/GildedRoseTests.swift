@@ -2,11 +2,22 @@
 import XCTest
 
 class GildedRoseTests: XCTestCase {
+    var itemsCollection: [Item] {
+        [regularItem, sulfurasItem, agedBrie, conjuredItem, backstagePass]
+    }
     var regularItem: Item { Item(name: "regular", sellIn: 10, quality: 15) }
     var sulfurasItem: Item { Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
     var agedBrie: Item { Item(name: "Aged Brie", sellIn: 2, quality: 8) }
     var conjuredItem: Item { Item(name: "conjured", sellIn: 20, quality: 21) }
     var backstagePass: Item { Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 15, quality: 25)}
+    
+    func test_maxQuality_toDontExceed50() {
+        for item in itemsCollection {
+            item.quality = 50
+            let updatedItem = update(item: item)
+            XCTAssertLessThanOrEqual(updatedItem.quality, 50, item.name)
+        }
+    }
  
     func test_regularItem_qualityShouldDecreaseBy1() {
         let updatedItem: Item = update(item: regularItem)
@@ -120,7 +131,6 @@ class GildedRoseTests: XCTestCase {
         let expiredItem = conjuredItem
         expiredItem.sellIn = 0
         expiredItem.quality = 3
-        test collection instead of classes
         let updatedItem = update(item: expiredItem)
         XCTAssertEqual(updatedItem.quality, 0)
     }
