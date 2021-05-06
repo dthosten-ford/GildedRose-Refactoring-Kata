@@ -18,6 +18,15 @@ class GildedRoseTests: XCTestCase {
             XCTAssertLessThanOrEqual(updatedItem.quality, 50, item.name)
         }
     }
+    
+    func test_quality_neverGoesBelow0() {
+        for item in itemsCollection {
+            item.quality = 0
+            item.sellIn = 0
+            let updatedItem = update(item: item)
+            XCTAssertGreaterThanOrEqual(updatedItem.quality, 0, item.name)
+        }
+    }
  
     func test_regularItem_qualityShouldDecreaseBy1() {
         let updatedItem: Item = update(item: regularItem)

@@ -43,6 +43,9 @@ extension ItemUpdater {
     }
 }
 
+continue exploring this
+protocol NonDecrementing {}
+
 protocol ItemStrategyProvider {
     func strategyForItem(_ item: Item) -> ItemUpdater
 }
@@ -87,13 +90,13 @@ class RegularItemUpdater: ItemUpdater {
     }
 }
 
-class DoNothingStrategy: ItemUpdater {
+class DoNothingStrategy: ItemUpdater, NonDecrementing {
     func updateQuality(_ item: Item) { }
     func updateExpiredQuality(_ item: Item) {}
     func updateSellin(_ item: Item) { }
 }
 
-class AgedBrieStrategy: ItemUpdater {
+class AgedBrieStrategy: ItemUpdater, NonDecrementing {
     private let mutator: IncrementDecrementHolder
 
     init(mutator: IncrementDecrementHolder) {
