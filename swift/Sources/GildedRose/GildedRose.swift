@@ -29,6 +29,10 @@ public class GildedRose {
     func isExpired(_ item: Item) -> Bool {
         return item.sellIn < 0
     }
+    
+}
+
+public class SulfurasItem: Item, NonDecrementingSellIn{
 }
 
 protocol ItemUpdater {
@@ -44,7 +48,7 @@ extension ItemUpdater {
 }
 
 //continue exploring this
-protocol NonDecrementing {}
+protocol NonDecrementingSellIn:Item {}
 
 protocol ItemStrategyProvider {
     func strategyForItem(_ item: Item) -> ItemUpdater
@@ -90,13 +94,13 @@ class RegularItemUpdater: ItemUpdater {
     }
 }
 
-class DoNothingStrategy: ItemUpdater, NonDecrementing {
+class DoNothingStrategy: ItemUpdater {
     func updateQuality(_ item: Item) { }
     func updateExpiredQuality(_ item: Item) {}
     func updateSellin(_ item: Item) { }
 }
 
-class AgedBrieStrategy: ItemUpdater, NonDecrementing {
+class AgedBrieStrategy: ItemUpdater {
     private let mutator: IncrementDecrementHolder
 
     init(mutator: IncrementDecrementHolder) {

@@ -6,7 +6,7 @@ class GildedRoseTests: XCTestCase {
         [regularItem, sulfurasItem, agedBrie, conjuredItem, backstagePass]
     }
     var regularItem: Item { Item(name: "regular", sellIn: 10, quality: 15) }
-    var sulfurasItem: Item { Item(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
+    var sulfurasItem: Item { SulfurasItem(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
     var agedBrie: Item { Item(name: "Aged Brie", sellIn: 2, quality: 8) }
     var conjuredItem: Item { Item(name: "conjured", sellIn: 20, quality: 21) }
     var backstagePass: Item { Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 15, quality: 25)}
@@ -31,15 +31,35 @@ class GildedRoseTests: XCTestCase {
     func test_sellIn_shouldDecreaseBy1() {
         for item in itemsCollection {
             let updatedItem = update(item: item)
-            assertDifference(original: item.sellIn, new: updatedItem.sellIn, expectedDifference: -1, item.name)
+            if (item is NonDecrementingSellIn){
+                assertDifference(original: item.sellIn, new: updatedItem.sellIn, expectedDifference: 0, item.name)
+            }
+            else{
+                assertDifference(original: item.sellIn, new: updatedItem.sellIn, expectedDifference: -1, item.name)
+            }
+            //alternate validation call to remove an If stmt (although not using the new protocol)
+            assertSellIn(item, updatedItem)
         }
     }
  
+    func assertSellIn(_ original : SulfurasItem, _ new: Item){
+        assertDifference(original: original.sellIn, new: new.sellIn, expectedDifference: 0, original.name)
+    }
+    
+    func assertSellIn(_ original : Item, _ new: Item){
+        assertDifference(original: original.sellIn, new: new.sellIn, expectedDifference: -1, original.name)
+    }
+    
+    //we are NOT able to overload by protocols, only Inheritance
+//    func assertSellIn(_ original : NonDecrementingSellIn, _ new: NonDecrementingSellIn){
+//        assertDifference(original: original.sellIn, new: new.sellIn, expectedDifference: 0, original.name)
+//    }
+    
     func test_regularItem_qualityShouldDecreaseBy1() {
         let updatedItem: Item = update(item: regularItem)
         assertDifference(original: regularItem.quality, new: updatedItem.quality, expectedDifference: -1)
     }
-    
+    //remove
     func test_regularItem_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: regularItem)
         assertDifference(original: regularItem.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
