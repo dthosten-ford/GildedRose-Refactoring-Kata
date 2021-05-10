@@ -27,6 +27,13 @@ class GildedRoseTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(updatedItem.quality, 0, item.name)
         }
     }
+
+    func test_sellIn_shouldDecreaseBy1() {
+        for item in itemsCollection {
+            let updatedItem = update(item: item)
+            assertDifference(original: item.sellIn, new: updatedItem.sellIn, expectedDifference: -1, item.name)
+        }
+    }
  
     func test_regularItem_qualityShouldDecreaseBy1() {
         let updatedItem: Item = update(item: regularItem)
@@ -165,9 +172,10 @@ fileprivate func assertDifference(
     original: Int,
     new: Int,
     expectedDifference: Int,
+    _ message: String = "",
     file: StaticString = #filePath,
     line: UInt = #line
 ) {
     let difference = new - original
-    XCTAssertEqual(difference, expectedDifference, file: file, line: line)
+    XCTAssertEqual(difference, expectedDifference, message, file: file, line: line)
 }
