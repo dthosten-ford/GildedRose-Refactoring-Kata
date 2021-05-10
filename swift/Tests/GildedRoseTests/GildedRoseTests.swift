@@ -6,7 +6,7 @@ class GildedRoseTests: XCTestCase {
         [regularItem, sulfurasItem, agedBrie, conjuredItem, backstagePass]
     }
     var regularItem: Item { Item(name: "regular", sellIn: 10, quality: 15) }
-    var sulfurasItem: Item { SulfurasItem(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
+    var sulfurasItem: SulfurasItem { SulfurasItem(name: "Sulfuras, Hand of Ragnaros", sellIn: 5, quality: 10) }
     var agedBrie: Item { Item(name: "Aged Brie", sellIn: 2, quality: 8) }
     var conjuredItem: Item { Item(name: "conjured", sellIn: 20, quality: 21) }
     var backstagePass: Item { Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 15, quality: 25)}
@@ -29,6 +29,7 @@ class GildedRoseTests: XCTestCase {
     }
 
     func test_sellIn_shouldDecreaseBy1() {
+        assertSellIn(sulfurasItem, regularItem)
         for item in itemsCollection {
             let updatedItem = update(item: item)
             if (item is NonDecrementingSellIn){
@@ -37,11 +38,11 @@ class GildedRoseTests: XCTestCase {
             else{
                 assertDifference(original: item.sellIn, new: updatedItem.sellIn, expectedDifference: -1, item.name)
             }
-            //alternate validation call to remove an If stmt (although not using the new protocol)
+
             assertSellIn(item, updatedItem)
         }
     }
- 
+
     func assertSellIn(_ original : SulfurasItem, _ new: Item){
         assertDifference(original: original.sellIn, new: new.sellIn, expectedDifference: 0, original.name)
     }
@@ -86,7 +87,7 @@ class GildedRoseTests: XCTestCase {
         let updatedItem = update(item: agedBrie)
         assertDifference(original: agedBrie.quality, new: updatedItem.quality, expectedDifference: 1)
     }
-    
+    //dupe logic
     func test_agedBrie_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: agedBrie)
         assertDifference(original: agedBrie.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
@@ -103,7 +104,7 @@ class GildedRoseTests: XCTestCase {
         let updatedItem = update(item: backstagePass)
         assertDifference(original: backstagePass.quality, new: updatedItem.quality, expectedDifference: 1)
     }
-    
+    //dupe logic
     func test_backstagePass_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: backstagePass)
         assertDifference(original: backstagePass.sellIn, new: updatedItem.sellIn, expectedDifference: -1)
@@ -146,7 +147,7 @@ class GildedRoseTests: XCTestCase {
             expectedDifference: -2
         )
     }
-
+//dupe logic
     func test_nonExpiredConjuredItem_sellInShouldDecreaseBy1() {
         let updatedItem = update(item: conjuredItem)
         assertDifference(original: conjuredItem.sellIn,
@@ -162,7 +163,7 @@ class GildedRoseTests: XCTestCase {
                          new: updatedItem.quality,
                          expectedDifference: -4)
     }
-    
+    //dupe?
     func test_expiredConjuredItem_QualityShouldNotBeLessThan0() {
         let expiredItem = conjuredItem
         expiredItem.sellIn = 0
@@ -171,6 +172,7 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(updatedItem.quality, 0)
     }
     
+    //dupe?
     func test_conjuredItem_QualityShouldNotBeLessThan0() {
         let item = conjuredItem
         item.quality = 1
